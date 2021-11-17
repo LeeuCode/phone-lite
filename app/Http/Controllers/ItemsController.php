@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Taxonomy;
+use App\Models\Item;
+
+class ItemsController extends Controller
+{
+    public function index()
+    {
+      $items = Item::where('publish', 1)->paginate(20);
+      return view('items.index', ['items' => $items]);
+    }
+
+    function create()
+    {
+      return view('items.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request = $request->except(['_token']);
+
+        Item::create($request);
+
+        return redirect()->back()->with('success', __('تم أضافةالصنف بنجاح !'));
+    }
+
+
+    public function edit($id)
+    {
+      return view('items.edit', ['item' => Item::find($id)]);
+    }
+
+    public function update(Request $request, $id)
+    {
+      $request = $request->except(['_token']);
+
+      Item::where('id', $id)->update($request);
+
+      return redirect()->back()->with('success', __('تم تعديل الصنف بنجاح !'));
+    }
+
+    public function status($id)
+    {
+      Item::where('id', $id)->update([
+        'publish' => 0
+      ]);
+
+      return redirect()->back()->with('success', __('تم حذف الصنف بنجاح !'));
+    }
+
+    public function search(Request $request)
+    {
+      $items = Item::where('publish', 1);
+
+      $request = $request->except(['title']);
+
+      if (isset($request->title)) {
+        $items->where('title', 'like','%'.$request->title.'%');
+      }
+
+      // Get all request and loop to search
+      foreach ($request as $key => $value) {
+        if(!is_null($value))
+          $items->where($key, $value);
+      }
+
+      return view('items.index', ['items' => $items->paginate(20)]);
+    }
+}

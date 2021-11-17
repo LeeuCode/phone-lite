@@ -1,0 +1,68 @@
+* {
+   direction: rtl;
+}
+.ticket {
+ font-size: 10px;
+ font-family: 'Times New Roman';
+
+}
+
+.ticket table td,
+.ticket table th,
+.ticket table tr,
+.ticket table {
+ border-collapse: collapse;
+ border-top: 0.2px solid #dee2e6;
+}
+
+.ticket table th {
+  border-top: 0.5px solid gray;
+  border-bottom: 0.5px solid gray;
+}
+
+.ticket table {
+  width: 100%;
+}
+
+.ticket td.description,
+.ticket th.description {
+ width: 75px;
+ max-width: 75px;
+ font-size: 10px;
+}
+
+.ticket td.quantity,
+.ticket th.quantity {
+ width: 40px;
+ max-width: 40px;
+ word-break: break-all;
+}
+
+.ticket td.price,
+.ticket th.price {
+ width: 40px;
+ max-width: 40px;
+ word-break: break-all;
+}
+
+.centered {
+ text-align: center;
+ align-content: center;
+}
+
+.ticket {
+ width: 100%;
+ /* max-width: 155px; */
+}
+
+.ticket img {
+ max-width: inherit;
+ width: inherit;
+}
+
+@media print {
+ .hidden-print,
+ .hidden-print * {
+     display: none !important;
+ }
+}
