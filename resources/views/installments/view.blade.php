@@ -4,12 +4,6 @@
 	{{ __('قسيمة قسط') }}-{{ $installment->customer->title }}
 @endsection
 
-@section('css')
-	<!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endsection
-
 @section('content')
   <div class="col-md-6 position-sticky sticky-top mt-3">
 		<div class="card card-success">
@@ -18,8 +12,8 @@
       </div>
 			<!-- form start -->
       <div class="card-body">
-				<form class="form-horizontal" action="{{ route('installments.store') }}" method="post">
-					@csrf
+				{{-- <form class="form-horizontal" action="{{ route('installments.store') }}" method="post">
+					@csrf --}}
 
 					<div class="form-group row">
   						<label for="barcode" class="col-md-3 control-label">{{ __('اسم العميل') }}</label>
@@ -28,18 +22,13 @@
                   <option value="{{ $installment->customer->id }}">{{ $installment->customer->title }}</option>
   							</select>
   						</div>
-  						{{-- <div class="col-md-1 p-0 d-flex">
-  							<button type="button" class="add-cat btn bg-light" data-title="{{ __('أضافة اسم عميل جديد') }}" data-type="customer" data-toggle="modal" data-target="#add-category">
-  								<i class="fas fa-plus" ></i>
-  							</button>
-  						</div> --}}
 		      </div>
 
 					<div class="form-group row">
 							<label for="title" class="col-md-3 control-label">{{ __('اسم الصنف') }}</label>
               <div class="col-md-8">
-  							<select name="item_id" class="form-control" id="item_id" required>
-									<option value="">{{ __('اختار من الاصناف') }}</option>
+  							<select name="item_id" class="form-control" id="item_id" required readonly>
+									<option value="{{ $installment->item_id }}">{{ $installment->item->title }}</option>
   							</select>
   						</div>
 					</div>
@@ -47,90 +36,91 @@
           <div class="form-group row">
 							<label for="balance" class="col-md-3 control-label">{{ __('الكمية') }}</label>
               <div class="col-md-4">
-                <input type="text" name="balance" class="form-control text-center" id="balance" placeholder="00" readonly>
+                <input type="text" name="balance" class="form-control text-center" value="{{  $installment->balance }}" id="balance" placeholder="00" readonly>
 					    </div>
 					</div>
 
 					<div class="form-group row">
 							<label for="quantity" class="col-md-3 control-label">{{ __('الكمية المباعة') }}</label>
               <div class="col-md-4">
-                <input type="text" name="quantity" class="form-control text-center" id="quantity" placeholder="00" required>
+                <input type="text" name="quantity" value="{{  $installment->quantity }}" class="form-control text-center" id="quantity" placeholder="00" required readonly>
 					    </div>
 					</div>
 
           <div class="form-group row">
   						<label for="purchasing_price" class="col-md-3 control-label">{{ __('سعر بيع الكاش') }}</label>
               <div class="col-md-4">
-                <input type="number" name="purchasing_price" class="form-control text-center" id="purchasing_price" placeholder="00" readonly>
+                <input type="number" name="purchasing_price" value="{{ $installment->purchasing_price }}" class="form-control text-center" id="purchasing_price" placeholder="00" readonly>
 			        </div>
 		      </div>
 
           <div class="form-group row">
   						<label for="installment_selling_price" class="col-md-3 control-label">{{ __('سعر لبيع القسط') }}</label>
               <div class="col-md-4">
-                <input type="number" name="installment_selling_price" class="form-control text-center" id="installment_selling_price" placeholder="00" required>
+                <input type="number" name="installment_selling_price" value="{{ $installment->installment_selling_price }}" class="form-control text-center" id="installment_selling_price" placeholder="00" required readonly>
 			        </div>
 		      </div>
 
           <div class="form-group row">
   						<label for="number_months" class="col-md-3 control-label">{{ __('عدد الاشهر') }}</label>
               <div class="col-md-4">
-                <input type="number" name="number_months" min="1" max="12" class="form-control text-center" id="number_months" placeholder="00" required>
+                <input type="number" name="number_months" min="1" max="12" value="{{ $installment->number_months }}" class="form-control text-center" id="number_months" placeholder="00" required readonly>
 			        </div>
 		      </div>
 
           <div class="form-group row">
   						<label for="advance_purchase" class="col-md-3 control-label">{{ __('مقدم عند الشراء') }}</label>
               <div class="col-md-4">
-                <input type="number" name="advance_purchase" class="form-control text-center" id="advance_purchase" placeholder="00">
+                <input type="number" name="advance_purchase" value="{{ $installment->advance_purchase }}" class="form-control text-center" id="advance_purchase" placeholder="00" readonly>
 			        </div>
 		      </div>
 
 					<div class="form-group row">
   						<label for="premiums_paid" class="col-md-3 control-label">{{ __('الأقساط المدفوعه') }}</label>
               <div class="col-md-4">
-                <input type="number" name="premiums_paid" class="form-control text-center" id="premiums_paid" placeholder="00">
+                <input type="number" name="premiums_paid" value="{{ $installment->premiums_paid }}" class="form-control text-center" id="premiums_paid" placeholder="00" readonly>
 			        </div>
 		      </div>
 
 					<div class="form-group row">
   						<label for="interest_value" class="col-md-3 control-label">{{ __('قيمة الفائدة') }}</label>
               <div class="col-md-4">
-                <input type="number" name="interest_value" class="form-control text-center" id="interest_value" placeholder="00" readonly>
+                <input type="number" name="interest_value" value="{{ $installment->interest_value }}" class="form-control text-center" id="interest_value" placeholder="00" readonly>
 			        </div>
 		      </div>
 
 					<div class="form-group row">
   						<label for="remaining_installments" class="col-md-3 control-label">{{ __('الاقساط المتبقيه') }}</label>
               <div class="col-md-4">
-                <input type="number" name="remaining_installments" class="form-control text-center" id="remaining_installments" placeholder="00" readonly>
+                <input type="number" name="remaining_installments" value="{{ $installment->remaining_installments }}" class="form-control text-center" id="remaining_installments" placeholder="00" readonly>
 			        </div>
 		      </div>
 
 					<div class="form-group row">
   						<label for="monthly_installment" class="col-md-3 control-label">{{ __('القسط الشهري') }}</label>
               <div class="col-md-4">
-                <input type="number" name="monthly_installment" class="form-control text-center" id="monthly_installment" placeholder="00" readonly>
+                <input type="number" name="monthly_installment" value="{{ $installment->monthly_installment }}" class="form-control text-center" id="monthly_installment" placeholder="00" readonly>
 			        </div>
 		      </div>
 
-					<button type="submit" class="btn btn-block btn-primary">{{ __('إنشاء قسيمة قسط جديد') }}</button>
-				</form>
+					{{-- <button type="submit" class="btn btn-block btn-primary">{{ __('إنشاء قسيمة قسط جديد') }}</button>
+				</form> --}}
       </div>
 		  <!-- /.card-body -->
 		</div>
 	</div>
 
   <div class="col-md-6 position-sticky sticky-top mt-3">
-		<div class="card card-success">
+		<div class="card card-info">
       <div class="card-header">
-        <h3 class="card-title">{{ __('قسيمة قسط') }}-{{ $installment->customer->title }}</h3>
+        <h3 class="card-title">{{ __('سداد الاقساط') }}</h3>
       </div>
 			<!-- form start -->
-      <div class="card-body">
+      <div class="card-body p-0">
 				<table class="table text-center" >
           <thead>
 						<tr>
+							<th>#</th>
 							<th>{{ __('الشهر') }}</th>
 							<th>{{ __('المبلغ') }}</th>
 							<th>{{ __('الحالة') }}</th>
@@ -138,12 +128,38 @@
 						</tr>
 					</thead>
 					<tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+						@php
+							$monthsConut = $installment->months()->count();
+						@endphp
+						@if ($monthsConut)
+							@foreach ($installment->months()->get() as $ky => $month)
+								<tr>
+									<td>{{ ($ky+1) }}</td>
+									<td>{{ $month->renewal_date }}</td>
+									<td>{{ $month->monthly_installment }}</td>
+									<td>
+										@if ($month->state == 0)
+											<span class="float-right badge state bg-danger">{{ __('لم يتم السداد') }}</span>
+										@else
+											<span class="float-right badge bg-success">{{ __('تم التسديد') }}</span>
+										@endif
+									</td>
+									<td>
+										<form class="" action="{{ route('installments.debt.payment', ['id' => $month->id]) }}" method="post">
+											@if ($month->state == 0)
+													@csrf
+													<button type="button" class="btn btn-sm btn-outline-success btn-save" >
+														<i class="fa fa-money-check-alt" ></i>
+													</button>
+											@endif
+											<button type="button" class="btn btn-sm btn-outline-info" >
+												<i class="fa fa-print" ></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							@endforeach
+						@endif
           </tbody>
         </table>
       </div>
@@ -187,74 +203,58 @@
 		</div>
 		<!-- /.modal-dialog -->
   </div>
+
+	@include('installments.print')
+
 @endsection
 
 @section('js')
-	<!-- Select2 -->
-	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-	{{-- <script>
+	<!-- printThis -->
+	<script src="{{ asset('dist/js/printThis.js') }}" charset="utf-8"></script>
+	<script>
 		(function($){
-			select2Ajax('#item_id', '{{ route('ajax.getItems') }}');
 
-			select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
-
-			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
-
-			$(document).on('submit', '.create-category', function(e){
+			$(document).on('click', '.btn-save', function(e){
 				e.preventDefault();
-				var url = $(this).attr('action'),
-						data = $(this).serialize();
+				var form = $(this).parent(),
+						url = form.attr('action'),
+						tr = $(this).parent().parent().parent(),
+						btn = $(this);
 
-					$.post(url,data,function(data, status){
-						$('input[name=title] , input[name=phone]').val('');
-						$('#add-category').modal('hide');
-				  });
-			});
+				$.ajaxSetup({
+				    headers: {
+				        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				    }
+				});
 
-			$(document).on('click', '.add-cat',function(){
-				var title = $(this).data('title'),
-						type = $(this).data('type');
+				$.post(url, function(data, status){
+					var state = tr.find('.state');
+					state.removeClass('bg-danger').addClass('bg-success').text('تم التسديد');
+					$('#remaining_installments').val(data.remaining_installments);
+					$('#premiums_paid').val(data.premiums_paid);
+					$('.premiums-paid').text(data.premiums_paid);
+					$('.remaining-installments').text(data.remaining_installments);
+					$('.renewal_date').text(data.renewal_date);
 
-				$('.title').text(title);
-				$('input[name=type]').val(type);
-			});
+					btn.remove();
 
-			$(window).keydown(function(event){
-		    if(event.keyCode == 13) {
-		      event.preventDefault();
-		      return false;
-		    }
-		  });
-
-			$('#item_id').on('select2:select', function (e) {
-				var item = e.params.data;
-
-				$.get("{{ route('ajax.getItem') }}",{ id:item.barcode }, function(data, status){
-					var itemData = data.item;
-							$('#balance').data('balance',itemData.store_balance),
-							$('#balance').val(itemData.store_balance);
-					$('#purchasing_price').val(itemData.selling_price);
-					$('#installment_selling_price').val(itemData.selling_price);
-					clcQtInstallments();
+					$("#ticket").printThis({
+						debug: false,
+						importCSS: false,
+						loadCSS: "{{ asset('dist/css/print-installments.css') }}",
+						// header: "<h1>Look at all of my kitties!</h1>"
+					});
 				});
 			});
 
-			$(document).on('keyup', '#quantity', function () {
-				clcQtInstallments();
+			$(document).on('click', '.test', function(){
+				$("#ticket").printThis({
+					debug: false,
+					importCSS: false,
+					loadCSS: "{{ asset('dist/css/print-installments.css') }}",
+					// header: "<h1>Look at all of my kitties!</h1>"
+				});
 			});
-
-			$(document).on('keyup', '#number_months', function() {
-				monthlyInstallment();
-			});
-
-			$(document).on('keyup', '#installment_selling_price', function () {
-				clcQtInstallments();
-			});
-
-			$(document).on('keyup', '#advance_purchase', function() {
-				clcQtInstallments();
-			});
-
 		})(jQuery)
-	</script> --}}
+	</script>
 @endsection

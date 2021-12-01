@@ -67,9 +67,10 @@ class InvoicesController extends Controller
   {
     $invoiceData = $request->only('invoice_type','movement_type','total','discount_amount',
       'discount_percentage','total_discount','tax_rate', 'tax_value', 'total_tax', 'total_bill',
-      'paid', 'residual'
+      'paid', 'residual', 'customer_id'
     );
 
+    $invoiceData['user_id'] = auth()->id();
     $invoice = Invoice::create($invoiceData);
 
     $getItems = $request->only('item')['item'];
@@ -83,13 +84,6 @@ class InvoicesController extends Controller
           $totalBlance = ($item->store_balance-$getItems['qt'][$key]);
         } else {
           $totalBlance = ($item->store_balance+$getItems['qt'][$key]);
-          // ItemPrice::create([
-          //   'item_id' => $value,
-          //   'purchasing_price' => $getItems['purchasing_price'][$key],
-          //   'selling_price' => $getItems['selling_price'][$key],
-          //   'quantity' => $getItems['qt'][$key],
-          //   'item_total' => $getItems['item_total'][$key],
-          // ]);
         }
 
         Item::where('id', $value)->update([
@@ -104,9 +98,9 @@ class InvoicesController extends Controller
           'store_balance' => $getItems['store_balance'][$key],
           'quantity' => $getItems['qt'][$key],
           'total' => $getItems['item_total'][$key],
-          'type' => $request->invoice_type
+          'type' => $request->invoice_type,
+          'date' => date('Y-m-d')
         ]);
-
       }
     }
 

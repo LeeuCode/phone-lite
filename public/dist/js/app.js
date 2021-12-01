@@ -35,20 +35,6 @@ $(function () {
             }
         }
     }
-
-    $(document).on('change', '#invoice_type', function(){
-      var type = $(this).val();
-
-      if (type == 'purchase') {
-        $('.purchasing').show();
-        $('.purchasing_price, .price').attr('readonly', false);
-        $('.purchasing_price, .price').removeClass('border-0');
-      } else {
-        $('.purchasing').hide();
-        $('.purchasing_price, .price').attr('readonly', true);
-        $('.purchasing_price, .price').addClass('border-0');
-      }
-    });
 });
 
 
@@ -73,13 +59,14 @@ function createTr(url,selector) {
     trID.find('.qt').val(qtTotal);
     if ($('#invoice_type').val() == 'purchase') {
       trID.find('.item-total').val(itemTotalPurchasing);
+      trInvoice.find('.prnt-item-total').text(itemTotalPurchasing);
     } else {
       trID.find('.item-total').val(itemTotal);
+      trInvoice.find('.prnt-item-total').text(itemTotal);
     }
 
     trInvoice.find('.quantity').text(qtTotal);
-    trInvoice.find('.prnt-item-total').text(itemTotal);
-
+    
     storeBalance(trID);
     itemTotalPrice();
     discountTotal();
@@ -94,7 +81,7 @@ function createTr(url,selector) {
           //====== Add table raw to GUI interface user. ======//
           appendContent(content,data,barcode);
 
-          appendToPrint(contentInovicePrint, data)
+          appendToPrint(contentInovicePrint, data, barcode);
 
           storeBalance(content);
           itemTotalPrice();
@@ -188,14 +175,22 @@ function appendContent(content,data, barcode) {
   $(content).prependTo(".table");
 }
 
-function appendToPrint(contentInovicePrint, data) {
+function appendToPrint(contentInovicePrint, data,  barcode) {
   //====== Add table raw to Print table. ======//
   contentInovicePrint.addClass('apend-item-prent');
   contentInovicePrint.attr('id', 'in'+barcode);
   contentInovicePrint.find('.description').text(data.item.title);
   contentInovicePrint.find('.quantity').text(1);
-  contentInovicePrint.find('.invoice-price').text(data.item.selling_price);
-  contentInovicePrint.find('.prnt-item-total').text(data.item.selling_price);
+  // contentInovicePrint.find('.invoice-price').text(data.item.selling_price);
+  // contentInovicePrint.find('.prnt-item-total').text(data.item.selling_price);
+
+  if ($('#invoice_type').val() == 'purchase') {
+    contentInovicePrint.find('.invoice-price').text(data.item.purchasing_price);
+    contentInovicePrint.find('.prnt-item-total').text(data.item.purchasing_price);
+  } else {
+    contentInovicePrint.find('.invoice-price').text(data.item.selling_price);
+    contentInovicePrint.find('.prnt-item-total').text(data.item.selling_price);
+  }
 
   $(contentInovicePrint).prependTo(".table-print");
 }

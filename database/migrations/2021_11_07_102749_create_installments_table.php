@@ -28,6 +28,7 @@ class CreateInstallmentsTable extends Migration
             $table->bigInteger('interest_value');
             $table->bigInteger('remaining_installments');
             $table->bigInteger('monthly_installment');
+            $table->date('date');
             $table->timestamps();
         });
     }

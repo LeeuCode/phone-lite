@@ -18,8 +18,25 @@
 
 	<a href="#" data-toggle="modal" data-target="#modal-search" class="btn btn-outline-primary mt-3" style="margin-right: auto;margin-left:1rem;" >
 		<i class="fa fa-search" ></i>
-		{{ __('البحث عن الاصناف') }}
+		{{ __('البحث عن قسيمة قسط') }}
 	</a>
+
+	<div class="col-md-12 mt-3">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="p-1 f-12" href="{{ route('installments') }}">
+          <small>{{ __('أقساط جاريه') }} ({{ DB::table('installments')->where('remaining_installments','!=', 0)->count() }})</small>
+        </a>
+      </li>
+      |
+      <li class="nav-item ">
+        <a class="p-1" href="{{ route('installment.paids') }}">
+          <small>{{ __('أقساط مسدده') }} ({{ DB::table('installments')->where('remaining_installments', 0)->count() }})</small>
+        </a>
+      </li>
+    </ul>
+  </div>
+
 	<div class="col-md-12 mt-3">
 		<div class="card">
 			<div class="card-body p-0">
@@ -38,108 +55,120 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach ($installments as $installment)
-							<tr>
-								<td>{{ $installment->customer->title }}</td>
-								<td>{{ $installment->customer->phone }}</td>
-								<td>
-									@php
-										$itemConut = $installment->item()->count();
-									@endphp
-									@if ($itemConut)
-										{{ $installment->item->title }}
-									@else
-										{{ __('لا يتوفر') }}
-									@endif
-								</td>
-								<td>{{ $installment->quantity }}</td>
-								<td>{{ $installment->number_months }}</td>
-								<td>{{ $installment->premiums_paid }}</td>
-								<td>{{ $installment->remaining_installments }}</td>
-								<td>{{ $installment->monthly_installment }}</td>
-								<td>
-									<form action="{{ route('item.status', ['id' => $installment->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post">
-										@csrf
-										<a href="{{ route('item.edit', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-info" >
-											<i class="fa fa-edit" ></i>
-										</a>
-										<a href="#" class="btn btn-sm btn-outline-success" >
-											<i class="fa fa-money-check-alt" ></i>
-										</a>
-										<a href="{{ route('installments.view', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-warning" >
-											<i class="fa fa-eye" ></i>
-										</a>
+						@if (count($installments) > 0)
+							@foreach ($installments as $installment)
+								<tr>
+									<td>{{ $installment->customer->title }}</td>
+									<td>{{ $installment->customer->phone }}</td>
+									<td>
+										@php
+											$itemConut = $installment->item()->count();
+										@endphp
+										@if ($itemConut)
+											{{ $installment->item->title }}
+										@else
+											{{ __('لا يتوفر') }}
+										@endif
+									</td>
+									<td>{{ $installment->quantity }}</td>
+									<td>{{ $installment->number_months }}</td>
+									<td>{{ $installment->premiums_paid }}</td>
+									<td>{{ $installment->remaining_installments }}</td>
+									<td>{{ $installment->monthly_installment }}</td>
+									<td>
+										<form action="{{ route('item.status', ['id' => $installment->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post">
+											@csrf
+											<a href="{{ route('item.edit', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-info" >
+												<i class="fa fa-edit" ></i>
+											</a>
+											<a href="#" class="btn btn-sm btn-outline-success" >
+												<i class="fa fa-money-check-alt" ></i>
+											</a>
+											<a href="{{ route('installments.view', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-warning" >
+												<i class="fa fa-eye" ></i>
+											</a>
 
-										<button type="submit" class="btn btn-sm btn-outline-danger" >
-											<i class="fa fa-trash-alt" ></i>
-										</button>
-									</form>
+											<button type="submit" class="btn btn-sm btn-outline-danger" >
+												<i class="fa fa-trash-alt" ></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							@endforeach
+						@else
+							<tr>
+								<td colspan="9" class="text-center" >
+									<i>
+										@if (request()->routeIs('devices.search'))
+											{{ __('لا توجد نتائج مطابقة لعملية بحثك') }}
+										@else
+											{{ __('لا توجد اي اقساط حتي الان') }}
+										@endif
+									</i>
 								</td>
 							</tr>
-						@endforeach
+						@endif
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 
-
 	<!-- form start -->
-	<form class="m-0" action="{{ route('item.search') }}" method="get">
+	<form class="m-0" action="{{ route('installments.search') }}" method="get">
 		<div class="modal fade" id="modal-search">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h4 class="modal-title">{{ __('البحث عن الأصناف') }}</h4>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">{{ __('البحث عن قسيمة قسط') }}</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body row">
 
-						<div class="form-group">
-							<label for="id" class="control-label small">{{ __('باركود الصنف') }}</label>
-							<input type="number" name="barcode" class="form-control text-center" id="barcode" placeholder="00">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="agent_name" class="control-label small">{{ __('اسم العميل') }}</label>
+								<input type="text" name="agent_name" class="form-control text-center" id="barcode" placeholder="{{ __('ابحث باسم العميل من هنا') }}">
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="id" class="control-label small">{{ __('اسم الصنف') }}</label>
-							<input type="text" name="title" class="form-control" id="title" placeholder="{{ __('أكتب اسم الصنف اذا لم تتذكر الباركود') }}" autocomplete="off">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="agent_phone" class="control-label small">{{ __('رقم الهاتف') }}</label>
+								<input type="number" name="agent_phone" class="form-control" id="agent_phone" placeholder="01123456789" autocomplete="off">
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('القسم') }}</label>
-							<select name="cat_id" class="form-control" id="cat_id">
-              	<option value="" selected>{{ __('اختار القسم') }}...</option>
-              </select>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="item_id" class="control-label small">{{ __('الصنف') }}</label>
+								<select name="item_id" class="form-control" id="item_id">
+									<option value="">{{ __('اختار من الاصناف') }}</option>
+  							</select>
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('الموديل') }}</label>
-							<select name="model" class="form-control" id="model">
-								<option value="" selected>{{ __('اختار الموديل') }}...</option>
-							</select>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="number_months" class="control-label small">{{ __('عدد الاشهر') }}</label>
+								<input type="number" name="number_months" class="form-control" id="number_months">
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('وحدة المنتج') }}</label>
-							<select name="unit_id" class="form-control" id="unit_id">
-              	<option value="" selected>{{ __('اختار الوحده') }}...</option>
-              </select>
-						</div>
-		      </div>
-		      <div class="modal-footer justify-content-between">
-		        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('إغلاق') }}</button>
-		        <button type="submit" class="btn btn-info">{{ __('البحث الان') }}</button>
-		      </div>
-		    </div>
-		    <!-- /.modal-content -->
-		  </div>
-		  <!-- /.modal-dialog -->
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('إغلاق') }}</button>
+						<button type="submit" class="btn btn-info">{{ __('البحث الان') }}</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
 	</form>
-
 @endsection
 
 @section('js')
@@ -147,11 +176,9 @@
 	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 	<script>
 		(function($){
-			select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
+			select2Ajax('#item_id', '{{ route('ajax.getItems') }}');
 
-			select2Ajax('#model', '{{ route('ajax.getModels') }}');
-
-			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
+			select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
 
 
 			// $(window).keydown(function(event){
@@ -162,5 +189,4 @@
 		  // });
 		})(jQuery)
 	</script>
-
 @endsection

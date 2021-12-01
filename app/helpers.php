@@ -49,6 +49,55 @@ function getVal($invoice, $selector)
   if (is_object($invoice)) {
     return $invoice->$selector;
   } else {
-    return '';
+    return 0;
   }
+}
+
+
+function permissions()
+{
+  return [
+    'items' => [
+      'name' => __('الاصناف'),
+    ],
+    'categories' => [
+      'name' => __('الاقسام'),
+    ],
+    'unities' => [
+      'name' => __('الوحدات'),
+    ],
+    'models' => [
+      'name' => __('الموديلات'),
+    ],
+    'receipt' => [
+      'name' => __('فاتورة مشتريات'),
+    ],
+    'sale_invoice' => [
+      'name' => __('فاتورة بيع'),
+    ],
+    'return_invoice' => [
+      'name' => __('فاتورة مرتجع'),
+    ],
+    'maintenance' => [
+      'name' => __('الصيانة'),
+    ],
+    'installments' => [
+      'name' => __('الاقساط'),
+    ],
+    'used' => [
+      'name' => __('العملاء'),
+    ],
+    'suppliers' => [
+      'name' => __('الموردين'),
+    ],
+    'users' => [
+      'name' => __('المستخدمين'),
+    ],
+    'permissions' => [
+      'name' => __('صلاحية المستخدمين'),
+    ],
+    'reporting' => [
+      'name' => __('التقارير'),
+    ],
+  ];
 }

@@ -19,9 +19,9 @@
        <tbody class="table-print">
            <tr class="hidden-print clone-invoice">
                <td class="description centered"></td>
-               <td ><span class="invoice-price centered" ></span>ج</td>
+               <td class="centered"><span class="invoice-price centered" ></span>ج</td>
                <td class="quantity centered"></td>
-               <td ><span class="prnt-item-total centered"></span>ج</td>
+               <td class="centered"><span class="prnt-item-total centered"></span>ج</td>
            </tr>
        </tbody>
        <tfoot>

@@ -81,16 +81,11 @@ return [
       ],
     ]
   ],
-  // 'phone_used' => [
-  //   'name' => 'الاجهزة المستعمله',
-  //   'icon' => 'fas fa-mobile-alt',
+  // 'balance_transfer' => [
+  //   'name' => 'تحويل رصيد',
+  //   'icon' => 'fas fa-fax',
   //   'route' => 'link'
   // ],
-  'balance_transfer' => [
-    'name' => 'تحويل رصيد',
-    'icon' => 'fas fa-fax',
-    'route' => 'link'
-  ],
   'installments' => [
     'name' => 'الاقساط',
     'icon' => 'fas fa-money-bill-wave',
@@ -120,6 +115,44 @@ return [
     'name' => 'المصروفات',
     'icon' => 'fas fa-money-check-alt',
     'route' => 'link'
+  ],
+  'users' => [
+    'name' => 'المستخدمون',
+    'icon' => 'fas fa-user-tie',
+    'route' => 'link',
+    'subitems' => [
+      'all' => [
+        'name' => 'المستخدمين',
+        'route' => 'users.employees'
+      ],
+      'add_user' => [
+        'name' => 'أضف مستخدم جديد',
+        'route' => 'users.employee.create'
+      ],
+      'permissions' => [
+        'name' => 'صلاحية المستخدمين',
+        'route' => 'link'
+      ],
+    ]
+  ],
+  'reporting' => [
+    'name' => 'التقارير',
+    'icon' => 'fas fa-chart-bar',
+    'route' => 'link',
+    'subitems' => [
+      'daily' => [
+        'name' => 'التقرير اليومي',
+        'route' => 'reports.daily'
+      ],
+      'items' => [
+        'name' => 'جرد الاصناف',
+        'route' => 'reports.items.inventory'
+      ],
+      'sale_invoice' => [
+        'name' => 'حركة المبيعات',
+        'route' => 'reports.invoice.sale'
+      ],
+    ]
   ],
   'settings' => [
     'name' => 'اعدادات النظام',

@@ -24,6 +24,22 @@ class AjaxController extends Controller
         'pagination' => $data->nextPageUrl() ? true : false]
     );
   }
+
+  public function getSuppliers(Request $request)
+  {
+    /* ====== Get value from search input. ====== */
+    $search = $request->get('search');
+
+    /* ====== Get all categories name where like search input value. ====== */
+    $data = Customer::where('type', 'suppliers')->paginate(7);
+
+    /* ====== Return store names as json. ====== */
+    return response()->json(
+        ['items' => $data->toArray()['data'],
+        'pagination' => $data->nextPageUrl() ? true : false]
+    );
+  }
+
   public function getCategories(Request $request)
   {
     /* ====== Get value from search input. ====== */

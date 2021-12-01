@@ -12,7 +12,7 @@
 */
 
 
-// Route::group(['middleware' => ['auth']], function(){
+Route::group(['middleware' => ['auth']], function(){
 
   Route::get('/', function () {
     return view('index'); //view('welcome');
@@ -78,6 +78,7 @@
   Route::get('ajax/damages', 'AjaxController@getDamges')->name('ajax.getDamges');
   Route::get('ajax/devices', 'AjaxController@getDvices')->name('ajax.getDvices');
   Route::get('ajax/customers', 'AjaxController@getCustomers')->name('ajax.getCustomers');
+  Route::get('ajax/suppliers', 'AjaxController@getSuppliers')->name('ajax.getSuppliers');
 
 
   Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
@@ -97,27 +98,51 @@
   /*================================
   ||----- [Customers Routes] ------||
   =================================*/
-  Route::get('users/customers', 'UsersController@index')->name('users.customers');
-  Route::get('user/create', 'UsersController@create')->name('user.create');
-  Route::get('user/edit/{id}', 'UsersController@edit')->name('user.edit');
-  Route::get('users/suppliers', 'UsersController@suppliers')->name('users.suppliers');
-  Route::get('user/supplier/create', 'UsersController@supplierCreate')->name('user.suppliers.create');
-  Route::get('user/supplier/edit/{id}', 'UsersController@supplierEdit')->name('user.supplier.edit');
+  Route::get('users/customers', 'CustomersController@index')->name('users.customers');
+  Route::get('user/create', 'CustomersController@create')->name('user.create');
+  Route::get('user/edit/{id}', 'CustomersController@edit')->name('user.edit');
+  Route::get('users/suppliers', 'CustomersController@suppliers')->name('users.suppliers');
+  Route::get('user/supplier/create', 'CustomersController@supplierCreate')->name('user.suppliers.create');
+  Route::get('user/supplier/edit/{id}', 'CustomersController@supplierEdit')->name('user.supplier.edit');
 
-  Route::post('user/store', 'UsersController@store')->name('user.store');
-  Route::post('user/update/{id}', 'UsersController@update')->name('user.update');
-  Route::post('user/destroy/{id}', 'UsersController@destroy')->name('user.destroy');
+  Route::post('user/store', 'CustomersController@store')->name('user.store');
+  Route::post('user/update/{id}', 'CustomersController@update')->name('user.update');
+  Route::post('user/destroy/{id}', 'CustomersController@destroy')->name('user.destroy');
 
   /*================================
   ||---- [Installments Routes] ----||
   =================================*/
   Route::get('installments', 'InstallmentsController@index')->name('installments');
+  Route::get('installments/paids', 'InstallmentsController@installmentPaids')->name('installment.paids');
+  Route::get('installments/search', 'InstallmentsController@search')->name('installments.search');
   Route::get('installments/create', 'InstallmentsController@create')->name('installments.create');
   Route::get('installments/view/{id}', 'InstallmentsController@view')->name('installments.view');
 
   Route::post('installments/srore', 'InstallmentsController@store')->name('installments.store');
+  Route::post('installments/debt/payment/{id}', 'InstallmentsController@debtPayment')->name('installments.debt.payment');
 
-// });
+  /*================================
+  ||------- [Users Routes] --------||
+  =================================*/
+  Route::get('users/employees', 'UsersController@index')->name('users.employees');
+  Route::get('users/employee/create', 'UsersController@create')->name('users.employee.create');
+  Route::get('users/employee/edit/{id}', 'UsersController@edit')->name('users.employee.edit');
+
+  /*================================
+  ||----- [Permission Routes] -----||
+  =================================*/
+  Route::get('permission/create', 'PermissionController@create')->name('permission.create');
+
+  Route::post('permission/store', 'PermissionController@store')->name('permission.store');
+
+  /*================================
+  ||------ [Reports Routes] -------||
+  =================================*/
+  Route::get('reports/items/inventory', 'ReportsController@itemsInventory')->name('reports.items.inventory');
+  Route::get('reports/invoice/sale', 'ReportsController@saleInvoice')->name('reports.invoice.sale');
+  Route::get('reports/daily', 'ReportsController@daily')->name('reports.daily');
+
+});
 
 Auth::routes();
 

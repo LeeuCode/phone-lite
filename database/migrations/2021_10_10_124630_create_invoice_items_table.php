@@ -23,6 +23,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->integer('quantity');
             $table->integer('total');
             $table->string('type');
+            $table->date('date');
             $table->timestamps();
         });
     }

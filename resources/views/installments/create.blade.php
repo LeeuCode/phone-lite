@@ -1,7 +1,7 @@
 @extends('stander')
 
 @section('title')
-	{{ __('أضافة صنف جديد') }}
+	{{ __('أضافة قسيمة قسط جديدة') }}
 @endsection
 
 @section('css')
@@ -11,16 +11,16 @@
 @endsection
 
 @section('content')
-  <div class="col-md-6 position-sticky sticky-top ml-auto mr-auto mt-3">
+  <div class="col-md-6 ml-auto mr-auto mt-3">
 		<div class="card card-primary">
       <div class="card-header">
-        <h3 class="card-title">{{ __('أضافة صنف جديد') }}</h3>
+        <h3 class="card-title">{{ __('أضافة قسيمة قسط جديدة') }}</h3>
       </div>
 			<!-- form start -->
       <div class="card-body">
 				<form class="form-horizontal" action="{{ route('installments.store') }}" method="post">
 					@csrf
-
+					<input type="hidden" name="date" value="{{ date('Y-m-d') }}">
 					<div class="form-group row">
   						<label for="barcode" class="col-md-3 control-label">{{ __('اسم العميل') }}</label>
               <div class="col-md-8">
@@ -89,7 +89,7 @@
 					<div class="form-group row">
   						<label for="premiums_paid" class="col-md-3 control-label">{{ __('الأقساط المدفوعه') }}</label>
               <div class="col-md-4">
-                <input type="number" name="premiums_paid" class="form-control text-center" id="premiums_paid" placeholder="00">
+                <input type="number" name="premiums_paid" class="form-control text-center" id="premiums_paid" value="0" placeholder="00" readonly>
 			        </div>
 		      </div>
 
@@ -134,7 +134,7 @@
 					</button>
 				</div>
 
-				<form class="create-category" action="{{ route('ajax.createUser') }}" method="post">
+				<form class="create-user" action="{{ route('ajax.createUser') }}" method="post">
 						@csrf
 						<div class="modal-body">
 								<input type="hidden" name="type" value="customer">
@@ -169,9 +169,7 @@
 
 			select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
 
-			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
-
-			$(document).on('submit', '.create-category', function(e){
+			$(document).on('submit', '.create-user', function(e){
 				e.preventDefault();
 				var url = $(this).attr('action'),
 						data = $(this).serialize();
@@ -206,6 +204,7 @@
 							$('#balance').val(itemData.store_balance);
 					$('#purchasing_price').val(itemData.selling_price);
 					$('#installment_selling_price').val(itemData.selling_price);
+
 					clcQtInstallments();
 				});
 			});

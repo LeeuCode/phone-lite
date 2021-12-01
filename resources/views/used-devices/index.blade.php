@@ -126,11 +126,17 @@
 								</div>
 							@endforeach
 						@else
-							@if (request()->routeIs('devices.search'))
-								{{ __('لا توجد نتائج مطابقة لعملية بحثك') }}
-							@else
-								{{ __('لا يوجد اي اجهزة حتي الان') }}
-							@endif
+							<tr>
+								<td colspan="9" class="text-center" >
+									<i>
+										@if (request()->routeIs('devices.search'))
+											{{ __('لا توجد نتائج مطابقة لعملية بحثك') }}
+										@else
+											{{ __('لا يوجد اي اجهزة حتي الان') }}
+										@endif
+									</i>
+								</td>
+							</tr>
 						@endif
 					</tbody>
 				</table>
@@ -145,7 +151,7 @@
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h4 class="modal-title">{{ __('البحث عن الأصناف') }}</h4>
+		        <h4 class="modal-title">{{ __('البحث عن جهاز مستعمل') }}</h4>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>

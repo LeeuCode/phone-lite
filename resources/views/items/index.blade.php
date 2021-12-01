@@ -81,10 +81,29 @@
 										<a href="{{ route('item.edit', ['id' => $item->id]) }}" class="btn btn-outline-info" >
 											<i class="fa fa-edit" ></i>
 										</a>
+										<a href="#" data-id="{{ $item->id }}" class="print-barcode btn btn-outline-warning" >
+											<i class="fa fa-barcode" ></i>
+										</a>
 										<button type="submit" class="btn btn-outline-danger" >
 											<i class="fa fa-eye-slash" ></i>
 										</button>
 									</form>
+
+									<div id="div-barcode-{{ $item->id }}" class="d-none"  style="width:100%">
+										<p style="width:100%;text-align:center;margin:0;font-size:10px">{{ $item->title }}</p>
+										{{-- <svg class="barcode" style="width:100%;text-align:center;"
+											jsbarcode-format="CODE128"
+											jsbarcode-value="123456789012"
+											jsbarcode-textmargin="0"
+											jsbarcode-fontoptions="bold"
+											>
+										</svg> --}}
+										<img class="barcode" style="width:100%"
+										jsbarcode-format="CODE128"
+										jsbarcode-value="123456789012"
+										jsbarcode-textmargin="0"
+										jsbarcode-fontoptions="bold" />
+									</div>
 								</td>
 							</tr>
 						@endforeach
@@ -156,6 +175,11 @@
 @section('js')
 	<!-- Select2 -->
 	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+	<!-- JsBarcode -->
+	<script src="{{ asset('dist/js/JsBarcode.all.min.js') }}"></script>
+	<!-- printThis -->
+	<script src="{{ asset('dist/js/printThis.js') }}" charset="utf-8"></script>
+
 	<script>
 		(function($){
 			select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
@@ -163,6 +187,22 @@
 			select2Ajax('#model', '{{ route('ajax.getModels') }}');
 
 			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
+
+			JsBarcode(".barcode").init();
+
+			$(document).on('click', '.print-barcode', function (e) {
+				e.preventDefault();
+				var id = $(this).data('id');
+
+				$("#div-barcode-"+id).printThis({
+					debug: true,
+					importCSS: false,
+					// loadCSS: "{{ asset('dist/css/print-installments.css') }}",
+					// header: "<h1>Look at all of my kitties!</h1>"
+				});
+			})
+
+
 
 
 			// $(window).keydown(function(event){

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     protected $fillable = ['barcode', 'user_id','title', 'cat_id', 'unit_id', 'model',
-    'warranty_period', 'purchasing_price', 'selling_price', 'average_price', 'store_balance', 'expiration_date'];
+    'warranty_period', 'purchasing_price', 'selling_price', 'average_price', 'store_balance',
+    'expiration_date'];
 
     public function category()
     {

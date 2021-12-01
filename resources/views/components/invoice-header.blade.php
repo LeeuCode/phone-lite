@@ -13,6 +13,7 @@
     }
 @endphp
 
+<input type="hidden" name="date" value="{{ date('Y-m-d') }}">
 <div class="col-md-12 mt-3 position-sticky sticky-top">
   <div class="card card-primary">
     <!-- form start -->
@@ -80,14 +81,18 @@
           </div>
         </div>
 
-        <div class="col-md-3 purchasing" {!! (!request()->routeIs('invoices.purchase')) ? 'style="display: none;"' : '' !!}>
-          <div class="form-group">
-            <label for="agentName" class="control-label small">{{ __('اسم العميل') }}</label>
-            <div class="input-group">
-              <select class="form-control form-control-sm input-group-prepend" id="agentName">
-                <option value="">{{ __('أكتب اسم الصنف اذا لم تتذكر الباركود') }}</option>
+        <div class="col-md-3 dues" {!! (!request()->routeIs('invoices.purchase')) ? 'style="display: none;"' : '' !!}>
+          <div class="form-group row m-0">
+            <div class="col-md-10 p-0">
+              <label for="agentName" class="control-label small agentName">
+                {{ __('اسم المورد') }}
+              </label>
+              <select name="customer_id" class="form-control form-control-sm wh-100 user-type" id="supplier_id" placeholder="{{ __('اختار من هنا.....') }}">
               </select>
-              <button type="button" class="add-cat btn bg-light input-group-prepend" data-title="أضف جهاز جديد" data-type="devices" data-toggle="modal" data-target="#add-category">
+            </div>
+            <div class="col-md-2 p-0">
+              <label for="agentName" class="control-label small">.</label>
+              <button type="button" class="add-cat btn bg-light input-group-prepend" data-toggle="modal" data-target="#add-category">
                 <i class="fas fa-plus"></i>
               </button>
             </div>
@@ -106,17 +111,72 @@
     (function($){
       select2Ajax('#item-name', '{{ route('ajax.getItems') }}');
 
-      $(document).on('change', '#item-name', function() {
-        // alert($(this).val())
+      select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
+
+      select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
+
+      $(document).on('change', '#invoice_type', function(){
+        var type = $(this).val(),
+            movement_type = $('#movement_type').val();
+
+        $("#supplier_id, #customer_id").empty();
+
+        if (type == 'purchase') {
+          $('.purchasing, .dues').show();
+          $('.purchasing_price, .price').attr('readonly', false);
+          $('.purchasing_price, .price').removeClass('border-0');
+
+          $('input[name=type]').val('suppliers');
+          $('.user-type').attr('id', 'supplier_id');
+          $('.agentName').text('اسم المورد');
+          select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
+        } else {
+          if(movement_type == 'dues') {
+            $('.dues').show();
+          } else {
+            $('.dues').hide();
+          }
+
+          $('.purchasing').hide();
+          $('.purchasing_price, .price').attr('readonly', true);
+          $('.purchasing_price, .price').addClass('border-0');
+
+          $('input[name=type]').val('customer');
+          $('.user-type').attr('id', 'customer_id');
+          $('.agentName').text('اسم العميل');
+          select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
+        }
+      });
+
+      $(document).on('change', '#movement_type', function() {
+        var type = $(this).val();
+
+        $("#supplier_id, #customer_id").empty();
+
+        if (type == 'dues') {
+          $('.dues').show();
+        } else {
+          $('.dues').hide();
+        }
       })
 
       $('#item-name').on('select2:select', function (e) {
           var data = e.params.data;
 
-          console.log(data);
           createTr("{{ route('ajax.getItem') }}", data.barcode);
           $(this).val('');
       });
+
+      $(document).on('submit', '.create-user', function(e){
+				e.preventDefault();
+				var url = $(this).attr('action'),
+						data = $(this).serialize();
+
+					$.post(url,data,function(data, status){
+						$('input[name=title] , input[name=phone]').val('');
+						$('#add-category').modal('hide');
+				  });
+			});
     })(jQuery)
   </script>
 @endsection
