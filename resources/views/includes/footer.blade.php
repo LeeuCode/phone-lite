@@ -11,7 +11,7 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
+@include('components.installment-collection-modal')
 
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -22,20 +22,12 @@
 <!-- SweetAlert2 -->
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('dist/js/app.js') }}" charset="utf-8"></script>
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
   (function($){
-    // var Toast = Swal.mixin({
-    //   toast: true,
-    //   position: 'top-start',
-    //   showConfirmButton: false,
-    //   timer: 3000
-    // });
-
-    // Toast.fire({
-    //   icon: 'success',
-    //   title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-    // })
+    select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
 
     @if (\Session::has('success'))
     Swal.fire(

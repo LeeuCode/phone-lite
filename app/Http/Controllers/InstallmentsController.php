@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InstallmentMonth;
 use Illuminate\Http\Request;
 use App\Models\Installment;
+use App\Models\Customer;
 use App\Models\Item;
 
 class InstallmentsController extends Controller
@@ -13,6 +14,19 @@ class InstallmentsController extends Controller
     {
       $installments = Installment::where('remaining_installments', '!=', 0)->paginate(15);
       return view('installments.index', ['installments' => $installments]);
+    }
+
+    public function byUser($id)
+    {
+      $installments = Installment::where('customer_id', $id)
+                      ->where('remaining_installments', '!=', 0)
+                      ->paginate(15);
+      $customer = Customer::find($id);
+
+      return view('installments.by-user-id', [
+        'installments' => $installments,
+        'customer' => $customer,
+      ]);
     }
 
     public function installmentPaids()

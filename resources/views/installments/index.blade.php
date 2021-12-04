@@ -24,7 +24,7 @@
 	<div class="col-md-12 mt-3">
     <ul class="nav">
       <li class="nav-item">
-        <a class="p-1 f-12" href="{{ route('installments') }}">
+        <a class="p-1 f-12 text-danger" href="{{ route('installments') }}">
           <small>{{ __('أقساط جاريه') }} ({{ DB::table('installments')->where('remaining_installments','!=', 0)->count() }})</small>
         </a>
       </li>
@@ -58,7 +58,9 @@
 						@if (count($installments) > 0)
 							@foreach ($installments as $installment)
 								<tr>
-									<td>{{ $installment->customer->title }}</td>
+									<td>
+										<a href="{{ route('installment.user', ['id'=> $installment->customer_id]) }}">{{ $installment->customer->title }}</a>
+									</td>
 									<td>{{ $installment->customer->phone }}</td>
 									<td>
 										@php

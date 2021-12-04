@@ -1,13 +1,26 @@
-{{-- @section('css')
-  @parent
-  <style media="screen">
+@include('components.print-header')
 
-  </style>
-@endsection --}}
-<div id="ticket" class="ticket d-none">
-   <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/The_Metfone_Logo.png" alt="Logo">
-   <h4 class="centered" style="font-family: tahoma"> محل النور و الهدي للهواتف و الصيانه</h4>
-   <table>
+  <p class="p-1" style="width:55%;float:right" >
+    <strong>{{ __('الكاشير') }}:</strong>
+    {{ auth()->user()->name }}
+  </p>
+
+  <p class="p-1" style="width:35%;float:right" >
+    <strong>{{ __('كود العميل') }}:</strong>
+    #{{ $id }}
+  </p>
+
+  <p class="p-1" style="width:55%;float:right" >
+    <strong>تاريخ:</strong>
+    {{ date('d/m/Y') }}
+  </p>
+
+  <p class="p-1" style="width:35%;float:right;text-algin:left;" >
+    <strong>الوقت:</strong>
+    {{ date('h:i a') }}
+  </p>
+
+   <table class="m-2">
        <thead>
            <tr>
                <th class="description centered">{{ __('الصنف') }}</th>
@@ -18,13 +31,19 @@
        </thead>
        <tbody class="table-print">
            <tr class="hidden-print clone-invoice">
-               <td class="description centered"></td>
-               <td class="centered"><span class="invoice-price centered" ></span>ج</td>
-               <td class="quantity centered"></td>
-               <td class="centered"><span class="prnt-item-total centered"></span>ج</td>
+               <td class="description centered p-1"></td>
+               <td class="centered p-1"><span class="invoice-price centered" ></span>ج</td>
+               <td class="quantity centered p-1"></td>
+               <td class="centered p-1"><span class="prnt-item-total centered"></span>ج</td>
            </tr>
        </tbody>
        <tfoot>
+         {{-- <tr>
+            <th class=""></th>
+             <th class=""></th>
+             <th class="">{{ __('') }}</th>
+             <th ><span class="totalPrint" ></span>ج</th>
+         </tr> --}}
          <tr>
             <th class=""></th>
              <th class=""></th>
@@ -33,6 +52,4 @@
          </tr>
        </tfoot>
    </table>
-   <p class="centered">Thanks for your purchase!
-       <br>parzibyte.me/blog</p>
-</div>
+@include('components.print-footer')

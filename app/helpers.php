@@ -101,3 +101,60 @@ function permissions()
     ],
   ];
 }
+
+function addOption($key, $value)
+{
+    if(!empty($value)) {
+        $val = '';
+
+        if (is_array($value)) {
+            $val = json_encode($value);
+        } else {
+            $val = $value;
+        }
+
+        $lang = app()->getLocale();
+
+        $optionFound =  \DB::table('options')->where('key', $key)->count();
+
+        if ($optionFound > 0) {
+            \DB::table('options')->where('key', $key)
+            ->update(['value' => $val]);
+        } else {
+            \DB::table('options')->insertGetId([
+                'key'       => $key,
+                'value'     => $val,
+                'lang'      => $lang
+            ]);
+        }
+    }
+    return false;
+}
+
+function getOption($key)
+{
+    $optionDefualt = \DB::table('options')->where('key', $key);
+
+    $option = \DB::table('options')->where('key', $key);
+
+    if ($option->count() > 0) {
+        $val = $option->first()->value;
+
+        if (json_decode($val)) {
+            return json_decode($val);
+        }
+
+        return $val;
+    }
+    // elseif ($optionDefualt->count() > 0) {
+    //     $val = $optionDefualt->first()->value;
+    //
+    //     if (json_decode($val)) {
+    //         return json_decode($val);
+    //     }
+    //
+    //     return $val;
+    // }
+
+    return '';
+}

@@ -115,9 +115,9 @@
 		      </div>
 
           <div class="form-group row">
-  						<label for="expiration_date" class="col-md-2 control-label">{{ __('تاريخ انتهاء الصلحيه') }}</label>
+  						<label for="store_balance" class="col-md-2 control-label">{{ __('رصيد اول المدة') }}</label>
               <div class="col-md-4">
-                <input type="number" name="expiration_date" class="form-control text-center" id="expiration_date" placeholder="00">
+                <input type="number" name="store_balance" class="form-control text-center" id="store_balance" placeholder="00">
 			        </div>
 		      </div>
 

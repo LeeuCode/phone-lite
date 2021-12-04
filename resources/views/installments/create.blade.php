@@ -4,12 +4,6 @@
 	{{ __('أضافة قسيمة قسط جديدة') }}
 @endsection
 
-@section('css')
-	<!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endsection
-
 @section('content')
   <div class="col-md-6 ml-auto mr-auto mt-3">
 		<div class="card card-primary">
@@ -161,13 +155,11 @@
 @endsection
 
 @section('js')
-	<!-- Select2 -->
-	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 	<script>
 		(function($){
 			select2Ajax('#item_id', '{{ route('ajax.getItems') }}');
 
-			select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
+			select2Ajax('#installment-customer-id', '{{ route('ajax.getCustomers') }}');
 
 			$(document).on('submit', '.create-user', function(e){
 				e.preventDefault();

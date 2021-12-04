@@ -53,7 +53,7 @@
 							</div>
 							<div class="form-group text-center">
 									<label for="residual" class="control-label">{{ __('المتبقي') }}</label>
-									<input type="text" name="residual" class="form-control text-center" id="residual" placeholder="00">
+									<input type="text" name="residual" class="form-control text-center" id="residual" value="0" placeholder="00">
 							</div>
 					</div>
 					<div class="modal-footer justify-content-between">
@@ -68,7 +68,7 @@
 	  </div>
 	</form>
 
-	@include('invoices.print')
+	@include('invoices.print', ['id' => $id])
 
 	<div class="modal fade" id="add-category">
 		<div class="modal-dialog">
@@ -123,7 +123,7 @@
 				$('.totalItems').val((totalItems-itemTotal));
 				discountTotal();
 				$('#tax_value').val(taxRate());
-		    $('#total_tax, .total').val(totalTax());
+		    $('#total_tax, .total, #residual').val(totalTax());
 				$('.total').text(totalTax());
 				tr.remove();
 			});
@@ -163,7 +163,7 @@
 				storeBalance(trRow);
 				discountTotal();
 				$('#tax_value').val(taxRate());
-				$('#total_tax, .total').val(totalTax());
+				$('#total_tax, .total, #residual').val(totalTax());
 				$('.total').text(totalTax());
 				trInvoice.find('.quantity').text(qt);
 
@@ -171,7 +171,7 @@
 
 			$(document).on('keyup', '#tax_rate', function(){
 				$('#tax_value').val(taxRate());
-		    $('#total_tax, .total').val(totalTax());
+		    $('#total_tax, .total, #residual').val(totalTax());
 				$('.total').text(totalTax());
 			});
 
@@ -199,12 +199,13 @@
 									$("#ticket").printThis({
 											debug: false,
 											importCSS: false,
-											loadCSS: "{{ asset('dist/css/print.css') }}",
+											loadCSS: "{{ asset('dist/css/print-installments.css') }}",
 											// header: "<h1>Look at all of my kitties!</h1>"
 									});
 								},
 								success: function(data) {
 									$('.apend-item-prent').remove();
+									$('#id').val(data.id);
 									resetForm();
 								},
 								error: function(xhr) { // if error occured

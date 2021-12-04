@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'v5.8.35',
-        'version' => '5.8.35.0',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '8f1c4f85b6b6207da0efdd57a82c850b89da2867',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -326,12 +326,12 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'v5.8.35',
-            'version' => '5.8.35.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '8f1c4f85b6b6207da0efdd57a82c850b89da2867',
             'dev_requirement' => false,
         ),
         'laravel/tinker' => array(
@@ -598,8 +598,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0',
+                0 => '1.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -618,6 +618,15 @@
             'install_path' => __DIR__ . '/../psy/psysh',
             'aliases' => array(),
             'reference' => '90da7f37568aee36b116a030c5f99c915267edd4',
+            'dev_requirement' => false,
+        ),
+        'rachidlaasri/laravel-installer' => array(
+            'pretty_version' => '4.1.0',
+            'version' => '4.1.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../rachidlaasri/laravel-installer',
+            'aliases' => array(),
+            'reference' => 'b751b4c23dba893e9a4a12f881a6fd8fa921d228',
             'dev_requirement' => false,
         ),
         'ramsey/uuid' => array(

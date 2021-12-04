@@ -66,17 +66,18 @@ function createTr(url,selector) {
     }
 
     trInvoice.find('.quantity').text(qtTotal);
-    
+
     storeBalance(trID);
     itemTotalPrice();
     discountTotal();
     $('#tax_value').val(taxRate());
-    $('#total_tax, .total').val(totalTax());
+    $('#total_tax, .total, #residual').val(totalTax());
     $('.total').text(totalTax());
   } else {
     $.get(url,{ id:barcode }, function(data, status){
+      // Object.keys(data).length != 0
       // Check if data object empty.
-      if(Object.keys(data.item).length != 0) {
+      if(data.item !== null) {
         if (data.store_balance != 0) {
           //====== Add table raw to GUI interface user. ======//
           appendContent(content,data,barcode);
@@ -88,13 +89,13 @@ function createTr(url,selector) {
           discountTotal();
 
           $('#tax_value').val(taxRate());
-          $('#total_tax, .total').val(totalTax());
+          $('#total_tax, .total, #residual').val(totalTax());
           $('.total').text(totalTax());
         } else {
           alert('لا يوجد كمية متاحه بالمخزون !');
         }
       } else {
-        alert('not found')
+        alert('لا يوجد صنف مطابق لرقم البار كود')
       }
     });
   }

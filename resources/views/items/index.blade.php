@@ -20,6 +20,23 @@
 		<i class="fa fa-search" ></i>
 		{{ __('البحث عن الاصناف') }}
 	</a>
+
+	<div class="col-md-12 mt-3">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="p-1 f-12" href="{{ route('items') }}">
+          <small>{{ __('كل الأصناف') }} ({{ DB::table('items')->where('publish', 1)->count() }})</small>
+        </a>
+      </li>
+      |
+      <li class="nav-item ">
+        <a class="p-1 text-danger" href="{{ route('installment.paids') }}">
+          <small>{{ __('الأصناف المحذوفه') }} ({{ DB::table('items')->where('publish', 0)->count() }})</small>
+        </a>
+      </li>
+    </ul>
+  </div>
+
 	<div class="col-md-12 mt-3">
 		<div class="card">
 			<div class="card-body p-0">
@@ -108,6 +125,13 @@
 							</tr>
 						@endforeach
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="9">
+								{{ $items->links() }}
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>

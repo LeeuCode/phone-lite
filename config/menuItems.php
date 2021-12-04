@@ -32,7 +32,10 @@ return [
         'name' => 'الموديلات',
         'route' => 'models'
       ],
-
+      'balance' => [
+        'name' => 'رصيد اول المده',
+        'route' => 'item.balance'
+      ],
     ],
   ],
   'receipt' => [
@@ -81,11 +84,6 @@ return [
       ],
     ]
   ],
-  // 'balance_transfer' => [
-  //   'name' => 'تحويل رصيد',
-  //   'icon' => 'fas fa-fax',
-  //   'route' => 'link'
-  // ],
   'installments' => [
     'name' => 'الاقساط',
     'icon' => 'fas fa-money-bill-wave',
@@ -114,6 +112,11 @@ return [
   'expenses' => [
     'name' => 'المصروفات',
     'icon' => 'fas fa-money-check-alt',
+    'route' => 'link'
+  ],
+  'expenses' => [
+    'name' => 'الحسابات',
+    'icon' => 'fas fa-cash-register',
     'route' => 'link'
   ],
   'users' => [
@@ -157,7 +160,7 @@ return [
   'settings' => [
     'name' => 'اعدادات النظام',
     'icon' => 'fas fa-sliders-h',
-    'route' => 'link'
+    'route' => 'settings.index'
   ],
 
 ];

@@ -28,7 +28,6 @@ class ItemsController extends Controller
         return redirect()->back()->with('success', __('تم أضافةالصنف بنجاح !'));
     }
 
-
     public function edit($id)
     {
       return view('items.edit', ['item' => Item::find($id)]);
@@ -41,6 +40,21 @@ class ItemsController extends Controller
       Item::where('id', $id)->update($request);
 
       return redirect()->back()->with('success', __('تم تعديل الصنف بنجاح !'));
+    }
+
+    public function balance()
+    {
+      return view('items.balance');
+    }
+
+    public function balanceStore(Request $request)
+    {
+      $item = Item::find($request->item_id);
+      Item::where('id', $request->item_id)->update([
+        'store_balance' => ($item->store_balance+$request->store_balance)
+      ]);
+
+      return redirect()->back()->with('success', __('تم أضافة رصيد اول المده بنجاخ!'));
     }
 
     public function status($id)

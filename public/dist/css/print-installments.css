@@ -25,21 +25,64 @@
   width: 100%;
 }
 
-.ticket table th{
-  background-color: #ccc;
+.ticket table th:first-child{
+  background-color: #333;
   text-align: right;
   width: 30%;
   padding: 4px;
-  border: 1px solid #eee;
+  border-top: 1px dashed #333;
 }
 
 .ticket table td {
-  border: 1px solid #eee;
+  border-top: 1px dashed #333;
 }
 
 .centered {
  text-align: center;
  align-content: center;
+}
+
+.ticket {
+ width: 100%;
+ /* max-width: 155px; */
+}
+
+.ticket table td,
+.ticket table th,
+.ticket table tr,
+.ticket table {
+ border-collapse: collapse;
+ border-top: 1px dashed #333;
+}
+
+/* .ticket table th:first-child {
+  border-top: 1px dashed #333;
+  border-bottom: 1px dashed #333;
+} */
+
+.ticket table {
+  width: 100%;
+}
+
+.ticket td.description,
+.ticket th.description {
+ width: 75px;
+ max-width: 75px;
+ font-size: 10px;
+}
+
+.ticket td.quantity,
+.ticket th.quantity {
+ width: 40px;
+ max-width: 40px;
+ word-break: break-all;
+}
+
+.ticket td.price,
+.ticket th.price {
+ width: 40px;
+ max-width: 40px;
+ word-break: break-all;
 }
 
 .m-1{

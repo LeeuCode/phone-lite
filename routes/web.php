@@ -26,10 +26,12 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('item/create', 'ItemsController@create')->name('item.create');
   Route::get('item/edit/{id}', 'ItemsController@edit')->name('item.edit');
   Route::get('item/search', 'ItemsController@search')->name('item.search');
+  Route::get('item/balance', 'ItemsController@balance')->name('item.balance');
 
   Route::post('item/store', 'ItemsController@store')->name('item.store');
   Route::post('item/update/{id}', 'ItemsController@update')->name('item.update');
   Route::post('item/status/{id}', 'ItemsController@status')->name('item.status');
+  Route::post('item/balance/store', 'ItemsController@balanceStore')->name('item.balance.store');
 
   /*================================
   ||----- [Categories Routes] -----||
@@ -113,6 +115,7 @@ Route::group(['middleware' => ['auth']], function(){
   ||---- [Installments Routes] ----||
   =================================*/
   Route::get('installments', 'InstallmentsController@index')->name('installments');
+  Route::get('installment/user/{id}', 'InstallmentsController@byUser')->name('installment.user');
   Route::get('installments/paids', 'InstallmentsController@installmentPaids')->name('installment.paids');
   Route::get('installments/search', 'InstallmentsController@search')->name('installments.search');
   Route::get('installments/create', 'InstallmentsController@create')->name('installments.create');
@@ -142,6 +145,12 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('reports/invoice/sale', 'ReportsController@saleInvoice')->name('reports.invoice.sale');
   Route::get('reports/daily', 'ReportsController@daily')->name('reports.daily');
 
+  /*================================
+  ||------ [Options Routes] -------||
+  =================================*/
+  Route::get('settings', 'OptionsController@index')->name('settings.index');
+
+  Route::post('setting/update', 'OptionsController@update')->name('settings.update');
 });
 
 Auth::routes();
