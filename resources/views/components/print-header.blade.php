@@ -1,4 +1,4 @@
-<div id="ticket" class="ticket d-none">
+<div id="{{ $id }}" class="ticket d-none">
     @php
       $logo = getOption('logo');
     @endphp

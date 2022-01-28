@@ -24,7 +24,7 @@
 		</div>
 		@include('components.invoice-discount')
 
-		<div class="modal fade" id="calculation">
+		<div class="modal fade" data-backdrop="static" id="calculation">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -49,7 +49,7 @@
 							{{-- <input type="hidden" name="type" value="category"> --}}
 							<div class="form-group text-center">
 									<label for="paid" class="control-label">{{ __('المدفوع') }}</label>
-									<input type="text" name="paid" class="form-control text-center" id="paid" placeholder="00">
+									<input type="number" name="paid" class="form-control text-center paid" id="paid" placeholder="00" autocomplete="off">
 							</div>
 							<div class="form-group text-center">
 									<label for="residual" class="control-label">{{ __('المتبقي') }}</label>
@@ -68,9 +68,9 @@
 	  </div>
 	</form>
 
-	@include('invoices.print', ['id' => $id])
+	@include('invoices.print', ['id' => 'ticket'])
 
-	<div class="modal fade" id="add-category">
+	<div class="modal fade" data-backdrop="static" id="add-category">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -166,7 +166,6 @@
 				$('#total_tax, .total, #residual').val(totalTax());
 				$('.total').text(totalTax());
 				trInvoice.find('.quantity').text(qt);
-
 			});
 
 			$(document).on('keyup', '#tax_rate', function(){
@@ -178,6 +177,7 @@
 			$('body').on('keydown', function(e){
 				if (e.keyCode == 112) {
 					e.preventDefault();
+
 					$('#invoice-save').submit();
 				}
 			});
@@ -189,6 +189,7 @@
 						total = $('#all-total').val(),
 						paid = $('#paid').val();
 
+				$('#paid').focus();
 				if (total != 0) {
 					if (paid != '') {
 						$.ajax({
@@ -242,6 +243,42 @@
 
 				$('#residual').val(total-paid);
 			});
+
+			invoiceType();
 		})(jQuery)
+
+		function invoiceType() {
+		  var type = $('#invoice_type').val(),
+		      movement_type = $('#movement_type').val();
+
+		  $("#supplier_id, #customer_id").empty();
+
+		  if (type == 'purchase') {
+		    $('.purchasing, .dues').show();
+		    $('.purchasing_price, .price').attr('readonly', false);
+		    $('.purchasing_price, .price').removeClass('border-0');
+
+		    $('input[name=type]').val('suppliers');
+		    $('.user-type').attr('id', 'supplier_id');
+		    $('.agentName').text('اسم المورد');
+		    select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
+		  } else {
+		    if(movement_type == 'dues') {
+		      $('.dues').show();
+		    } else {
+		      $('.dues').hide();
+		    }
+
+		    $('.purchasing').hide();
+		    $('.purchasing_price, .price').attr('readonly', true);
+		    $('.purchasing_price, .price').addClass('border-0');
+
+		    $('input[name=type]').val('customer');
+		    $('.user-type').attr('id', 'customer_id');
+		    $('.agentName').text('اسم العميل');
+				
+		    select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
+		  }
+		}
 	</script>
 @endsection

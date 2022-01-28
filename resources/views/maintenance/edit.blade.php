@@ -7,6 +7,8 @@
 @section('css')
 	<!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+	<!-- daterange picker -->
+  <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
@@ -139,7 +141,7 @@
 					<div class="form-group row">
 						<label for="delivery_date" class="col-md-2 control-label">{{ __('تاريخ التسليم') }}</label>
 						<div class="col-md-4">
-							<input type="text" name="delivery_date" class="form-control text-center" value="{{ $device->delivery_date }}" id="delivery_date" placeholder="dd/mm/YYYY">
+							<input type="text" name="delivery_date" class="form-control text-center date" value="{{ $device->delivery_date }}" id="delivery_date" placeholder="dd/mm/YYYY">
 						</div>
 					</div>
 
@@ -191,6 +193,11 @@
 @section('js')
 	<!-- Select2 -->
 	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+	<!-- InputMask -->
+	<script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
+	<script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+	<!-- date-range-picker -->
+	<script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 	<script>
 		(function($){
 			select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
@@ -224,6 +231,18 @@
 
 				console.log();
 			});
+
+			//Date range picker with time picker
+			$('.date').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+	      timePicker: false,
+	      timePickerIncrement: 30,
+				format: 'LT',
+	      locale: {
+	        format: 'YYYY-MM-DD'
+	      }
+	    });
 
 			$(window).keydown(function(event){
 		    if(event.keyCode == 13) {

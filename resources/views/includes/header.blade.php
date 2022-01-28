@@ -28,7 +28,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-  
+
   @yield('css')
 
   <!-- Custom style for RTL -->
@@ -51,64 +51,98 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <ul class="navbar-nav mr-auto-navbav">
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
+        @php
+          $installmentMonths = App\Models\InstallmentMonth::whereDate('renewal_date', '<=',date('Y-m-d'))
+                               // ->where('state', 0)
+                               ->limit(5)
+                               ->get();
+          $monthsCount = count($installmentMonths);
+        @endphp
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
+          <i class="fas fa-hand-holding"></i>
+          @if ($monthsCount > 0)
+            <span class="badge badge-danger navbar-badge">{{ $monthsCount }}</span>
+          @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
+          <span class="dropdown-header">{{ __('الاقساط المطلوب دفعها') }}</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
+          @if ($monthsCount > 0)
+            @foreach ($installmentMonths as $installmentMonth)
+              <a href="#" class="dropdown-item">
+                <!-- Message Start -->
+                <div class="media">
+                  {{-- <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle"> --}}
+                  <div class="media-body">
+                    <h3 class="dropdown-item-title">
+                      <span class="text-primary">{{ __('دفع قسط') }}</span> {{ $installmentMonth->installment->customer->title }}
+                    </h3>
+                    <p class="text-sm"><strong class="text-primary">الصنف :</strong> {{ $installmentMonth->installment->item->title }}</p>
+                    <p class="text-sm text-muted">
+                      <i class="far fa-calendar-alt mr-1"></i>
+                      <strong class="text-danger">{{ $installmentMonth->renewal_date }}</strong>
+                    </p>
+                  </div>
+                </div>
+                <!-- Message End -->
+              </a>
+              <div class="dropdown-divider"></div>
+            @endforeach
+            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          @else
+            <i class="dropdown-item">{{ __('لا توجد اي اقساط مستحقه حتي الان') }}</i>
+          @endif
+        </div>
+
+      </li>
+
+      <li class="nav-item dropdown">
+        @php
+          $maintenancesMonths = App\Models\Maintenance::whereDate('delivery_date', '<=',date('Y-m-d'))
+                               // ->where('state', 0)
+                               ->limit(5)
+                               ->get();
+          $monthsCount = count($maintenancesMonths);
+        @endphp
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="fas fa-mobile-alt"></i>
+          @if ($monthsCount > 0)
+            <span class="badge badge-danger navbar-badge">{{ $monthsCount }}</span>
+          @endif
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-header">{{ __('اجهزة الصيانة المطلوب تسليمها') }}</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          @if ($monthsCount > 0)
+            @foreach ($maintenancesMonths as $maintenance)
+              <a href="#" class="dropdown-item">
+                <!-- Message Start -->
+                <div class="media">
+                  {{-- <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle"> --}}
+                  <div class="media-body">
+                    <h3 class="dropdown-item-title">
+                      <span class="text-primary">{{ __('تسليم جهاز') }} : </span> {{ $maintenance->agent_name }}
+                    </h3>
+                    <p class="text-sm"><strong class="text-primary">الصنف : </strong> {{ $maintenance->types->title }}</p>
+                    <p class="text-sm text-muted">
+                      <i class="far fa-calendar-alt mr-1"></i>
+                      <strong class="text-danger">{{ $maintenance->delivery_date }}</strong>
+                    </p>
+                  </div>
+                </div>
+                <!-- Message End -->
+              </a>
+              <div class="dropdown-divider"></div>
+            @endforeach
+            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          @else
+            <i class="dropdown-item">{{ __('لا يوجد اي جهاز صيانة للتسليم') }}</i>
+          @endif
         </div>
       </li>
+
       <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
+      {{-- <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge">15</span>
@@ -133,7 +167,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
-      </li>
+      </li> --}}
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -147,9 +181,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-header">{{ auth()->user()->name }}</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dark-mode-nav dropdown-item change-mode" data-mode="dark">
             <i class="fas fa-moon mr-2"></i>
             {{ __('الوضع الليلي') }}
+          </a>
+          <a href="#" class="white-mode-nav dropdown-item change-mode d-none" data-mode="white">
+            <i class="fas fa-sun mr-2"></i>
+            {{ __('الوضع النهاري') }}
           </a>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">

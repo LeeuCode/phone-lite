@@ -1,7 +1,7 @@
 @extends('stander')
 
 @section('title')
-	{{ __('أضافة صلاحية جديده') }}
+	{{ __('تعديل الصلاحيه') }}
 @endsection
 
 @section('css')
@@ -11,23 +11,16 @@
 @endsection
 
 @section('content')
-
-  <form class="w-100" action="{{ route('permission.store') }}" method="post">
+  <form class="w-100" action="{{ route('permission.update', ['id' => $groupPermission->id]) }}" method="post">
     @csrf
     <div class="col-md-12 mt-3">
-        <div class="card card-primary">
-          {{-- <div class="card-header">
-          <h3 class="card-title">{{ __('أضافة قسيمة قسط جديدة') }}</h3>
-        </div> --}}
+      <div class="card card-primary">
         <!-- form start -->
         <div class="card-body row">
-          {{-- <form class="form-horizontal" action="{{ route('installments.store') }}" method="post"> --}}
-          {{-- @csrf --}}
-          {{-- <input type="hidden" name="date" value="{{ date('Y-m-d') }}"> --}}
           <div class="col-md-4">
             <div class="form-group">
               <label for="barcode" class="control-label">{{ __('العنوان') }}</label>
-              <input type="text" class="form-control" name="title" value="">
+              <input type="text" class="form-control" name="title" value="{{ $groupPermission->title }}">
             </div>
           </div>
           {{-- </form> --}}
@@ -63,28 +56,28 @@
                   <td class="row">
                     <div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" name="{{ $key.'_create' }}" class="custom-control-input" id="{{ $key.'_create' }}">
+                        <input type="checkbox" {!! (getPermission($groupPermission->id, $key.'_create')) ? 'checked' : '' !!} name="{{ $key.'_create' }}" class="custom-control-input" id="{{ $key.'_create' }}">
                         <label class="custom-control-label" for="{{ $key.'_create' }}">{{ __('إنشاء') }}</label>
                       </div>
                     </div>
 
                     <div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" name="{{ $key.'_edit' }}" class="custom-control-input" id="{{ $key.'_edit' }}">
+                        <input type="checkbox" name="{{ $key.'_edit' }}" {!! (getPermission($groupPermission->id, $key.'_edit')) ? 'checked' : '' !!} class="custom-control-input" id="{{ $key.'_edit' }}">
                         <label class="custom-control-label" for="{{ $key.'_edit' }}">{{ __('تعديل') }}</label>
                       </div>
                     </div>
 
                     <div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" name="{{ $key.'_view' }}" class="custom-control-input" id="{{ $key.'_view' }}">
+                        <input type="checkbox" name="{{ $key.'_view' }}" {!! (getPermission($groupPermission->id, $key.'_view')) ? 'checked' : '' !!} class="custom-control-input" id="{{ $key.'_view' }}">
                         <label class="custom-control-label" for="{{ $key.'_view' }}">{{ __('عرض') }}</label>
                       </div>
                     </div>
 
                     <div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" name="{{ $key.'_delete' }}" class="custom-control-input" id="{{ $key.'_delete' }}">
+                        <input type="checkbox" name="{{ $key.'_delete' }}" {!! (getPermission($groupPermission->id, $key.'_delete')) ? 'checked' : '' !!} class="custom-control-input" id="{{ $key.'_delete' }}">
                         <label class="custom-control-label" for="{{ $key.'_delete' }}">{{ __('حذف') }}</label>
                       </div>
                     </div>

@@ -6,7 +6,7 @@
 </li>
 
 <li class="nav-item d-none d-sm-inline-block">
-  <a href="#" class="nav-link">
+  <a href="#" data-toggle="modal" data-target="#deues-model-cache" class="nav-link">
     <i class="fa fa-money-bill-alt"></i>
     {{ __('تحصيل فاتوره اجل') }}
   </a>

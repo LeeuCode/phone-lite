@@ -53,7 +53,6 @@ function getVal($invoice, $selector)
   }
 }
 
-
 function permissions()
 {
   return [
@@ -157,4 +156,18 @@ function getOption($key)
     // }
 
     return '';
+}
+
+function getPermission($packageID, $key)
+{
+  $permission = DB::table('permissions')
+  ->where('group_permission_id', $packageID)
+  ->where('key', $key)
+  ->count();
+
+  if ($permission > 0) {
+    return true;
+  } else {
+    return false;
+  }
 }

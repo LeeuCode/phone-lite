@@ -18,7 +18,7 @@
 					<input type="hidden" name="type" value="category">
           <div class="form-group">
   						<label for="barcode" class="control-label">{{ __('اسم القسم') }}</label>
-              <input type="text" name="title" class="form-control" id="barcode" placeholder="{{ __('اكتب اسم القسم هنا') }}">
+              <input type="text" autofocus name="title" class="form-control" id="barcode" placeholder="{{ __('اكتب اسم القسم هنا') }}">
 		      </div>
 
           <button type="submit" class="btn btn-primary">{{ __('حفظ') }}</button>

@@ -56,6 +56,13 @@
   right: 27px;
   top: -3px;
 }
+
+.dropdown-menu-lg {
+  max-width: 300px;
+  min-width: 280px !important;
+  padding: 0;
+}
+
 @media (min-width: 992px){
     .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .main-footer, .sidebar-mini.sidebar-collapse .main-header {
         margin-right: 4.6rem!important;

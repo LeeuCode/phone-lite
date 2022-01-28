@@ -29,7 +29,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="id" class="control-label small">{{ __('باركود الصنف') }}</label>
-              <input type="number" class="p-0 form-control form-control-sm text-center barcode" id="id" placeholder="00" autofocus autocomplete="off">
+              <input type="number" class="p-0 form-control form-control-sm text-center barcode" id="id" placeholder="00" autofocus="true" autocomplete="off">
             </div>
           </div>
         @endif
@@ -116,36 +116,7 @@
       select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
 
       $(document).on('change', '#invoice_type', function(){
-        var type = $(this).val(),
-            movement_type = $('#movement_type').val();
-
-        $("#supplier_id, #customer_id").empty();
-
-        if (type == 'purchase') {
-          $('.purchasing, .dues').show();
-          $('.purchasing_price, .price').attr('readonly', false);
-          $('.purchasing_price, .price').removeClass('border-0');
-
-          $('input[name=type]').val('suppliers');
-          $('.user-type').attr('id', 'supplier_id');
-          $('.agentName').text('اسم المورد');
-          select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
-        } else {
-          if(movement_type == 'dues') {
-            $('.dues').show();
-          } else {
-            $('.dues').hide();
-          }
-
-          $('.purchasing').hide();
-          $('.purchasing_price, .price').attr('readonly', true);
-          $('.purchasing_price, .price').addClass('border-0');
-
-          $('input[name=type]').val('customer');
-          $('.user-type').attr('id', 'customer_id');
-          $('.agentName').text('اسم العميل');
-          select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
-        }
+        invoiceType();
       });
 
       $(document).on('change', '#movement_type', function() {

@@ -152,9 +152,9 @@
 														<i class="fa fa-money-check-alt" ></i>
 													</button>
 											@endif
-											<button type="button" class="btn btn-sm btn-outline-info" >
+											<a href="{{ route('installments.print', ['id' => $month->id]) }}" class="btn btn-sm btn-outline-info print-installment" >
 												<i class="fa fa-print" ></i>
-											</button>
+											</a>
 										</form>
 									</td>
 								</tr>
@@ -204,13 +204,12 @@
 		<!-- /.modal-dialog -->
   </div>
 
-	@include('installments.print')
+	@include('installments.print', ['id' => 'installment-print-page'])
 
 @endsection
 
 @section('js')
-	<!-- printThis -->
-	<script src="{{ asset('dist/js/printThis.js') }}" charset="utf-8"></script>
+
 	<script>
 		(function($){
 
@@ -230,13 +229,33 @@
 				$.post(url, function(data, status){
 					var state = tr.find('.state');
 					state.removeClass('bg-danger').addClass('bg-success').text('تم التسديد');
-					$('#remaining_installments').val(data.remaining_installments);
-					$('#premiums_paid').val(data.premiums_paid);
-					$('.premiums-paid').text(data.premiums_paid);
-					$('.remaining-installments').text(data.remaining_installments);
-					$('.renewal_date').text(data.renewal_date);
+
+					setInstallmentPrintData(data);
 
 					btn.remove();
+
+					$("#installment-print-page").printThis({
+						debug: false,
+						importCSS: false,
+						loadCSS: "{{ asset('dist/css/print-installments.css') }}",
+						// header: "<h1>Look at all of my kitties!</h1>"
+					});
+				});
+			});
+
+			$(document).on('click','.print-installment', function (e) {
+				e.preventDefault();
+				var url = $(this).attr('href');
+
+				$.ajaxSetup({
+				    headers: {
+				        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				    }
+				});
+
+				$.get(url, function(data, status){
+					console.log(data);
+					setInstallmentPrintData(data);
 
 					$("#ticket").printThis({
 						debug: false,

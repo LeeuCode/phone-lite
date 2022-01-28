@@ -1,22 +1,22 @@
-@include('components.print-header')
+@include('components.print-header', ['id' => $id])
    <p class="p-1" style="width:55%;float:right" >
      <strong>{{ __('العميل') }}:</strong>
-     {{ $installment->customer->title }}
+     <span id="installment_customer_name"></span>
    </p>
 
    <p class="p-1" style="width:35%;float:right" >
      <strong>{{ __('كود العميل') }}:</strong>
-     #{{ $installment->customer->id }}
+     #<span id="installment_customer_id"></span>
    </p>
 
    <p class="p-1" style="width:55%;float:right" >
      <strong>تاريخ:</strong>
-     {{ date('d/m/Y') }}
+     <span class="date">{{ date('d/m/Y') }}</span>
    </p>
 
    <p class="p-1" style="width:35%;float:right;text-algin:left;" >
      <strong>الوقت:</strong>
-     {{ date('h:i a') }}
+     <span class="time">{{ date('h:i a') }}</span>
    </p>
 
    <div style="clear:both;"></div>
@@ -24,22 +24,22 @@
 
    <p class="p-1" style="width:55%;float:right;text-algin:left;" >
     <strong>{{ __('الصنف: ') }}</strong>
-    {{ $installment->item->title }}
+    <span id="installment_item_name"></span>
    </p>
 
    <p class="p-1" style="width:35%;float:right;text-algin:left;" >
     <strong>{{ __('الكمية المباعه: ') }}</strong>
-    {{  $installment->quantity }}
+    <span id="installment_quantity"></span>
    </p>
 
    <p class="p-1" style="width:55%;float:right;text-algin:left;" >
     <strong>{{ __('سعر البيع قسط: ') }}</strong>
-    {{ $installment->installment_selling_price }}ج
+    <span id="selling_price"></span>ج
    </p>
 
    <p class="p-1" style="width:35%;float:right;text-algin:left;" >
     <strong>{{ __('الاجماليه: ') }}</strong>
-    {{ ($installment->installment_selling_price*$installment->quantity) }}ج
+    <span id="installment_total"></span>ج
    </p>
 
    <div style="clear:both;"></div>
@@ -47,30 +47,32 @@
 
    <p class="p-1" style="width:55%;float:right;text-algin:left;" >
     <strong>{{ __('الاقساط المتبقيه: ') }}</strong>
-    <span class="remaining-installments">{{ $installment->remaining_installments }}</span>ج
+    <span class="remaining-installments"></span>
    </p>
 
    <p class="p-1" style="width:35%;float:right;text-algin:left;" >
     <strong>{{ __('قسط علي: ') }}</strong>
-    {{ $installment->number_months }} {{ __('شهراً') }}
+    <span id="installment_number_months"></span> {{ __('شهراً') }}
    </p>
 
    <p class="p-1" style="width:55%;float:right;text-algin:left;" >
     <strong>{{ __('الاقساط المدفوعه: ') }}</strong>
-    <span class="premiums-paid">{{ $installment->premiums_paid }}</span>
+    <span class="premiums-paid"></span>
    </p>
 
    <p class="p-1" style="width:35%;float:right;text-algin:left;" >
     <strong>{{ __('قسط شهري: ') }}</strong>
-    {{ $installment->monthly_installment }}ج
+    <span class="monthly_installment"></span>ج
    </p>
 
    <div style="clear:both;"></div>
    <div style="border-top: 0.5px dashed #333"></div>
    <p class="p-2" style="width: 100%">
      تم تسديد القسط الشهري بتاريخ
-     <strong class="renewal_date">1/11/2021</strong>
+     <strong class="renewal_date">{{ date('d/m/Y') }}</strong>
      و الذي هو بقيمة
-     <strong class="">{{ $installment->monthly_installment }}ج</strong>
+     <strong class="">
+       <span class="monthly_installment"></span>ج
+     </strong>
    </p>
 @include('components.print-footer')

@@ -106,4 +106,21 @@ class InvoicesController extends Controller
 
     return response()->json(['id' => ($invoice->id+1)]);
   }
+
+  public function invoiceDuesPay(Request $request)
+  {
+    $invoice = Invoice::find($request->id);
+    $movementType = $invoice->movement_type;
+    $piad = ($invoice->paid + $request->paid);
+
+    if ($invoice->total_bill <= $piad) {
+      $movementType = 'cash';
+    }
+    
+    invoice::where('id', $request->id)->update([
+      'paid' => $piad,
+      'movement_type' => $movementType
+    ]);
+
+  }
 }

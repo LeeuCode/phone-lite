@@ -80,9 +80,9 @@
 									<td>
 										<form action="{{ route('item.status', ['id' => $installment->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post">
 											@csrf
-											<a href="{{ route('item.edit', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-info" >
+											{{-- <a href="{{ route('item.edit', ['id' => $installment->id]) }}" class="btn btn-sm btn-outline-info" >
 												<i class="fa fa-edit" ></i>
-											</a>
+											</a> --}}
 											<a href="#" class="btn btn-sm btn-outline-success" >
 												<i class="fa fa-money-check-alt" ></i>
 											</a>

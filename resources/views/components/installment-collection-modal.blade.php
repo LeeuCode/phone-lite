@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <i class="fas fa-edit"></i>
+          <i class="fa fa-hand-holding-usd"></i>
           <span class="title" >{{ __('تحصيل قسط') }}</span>
           {{-- <span class="text-info">({{ $category->title }})</span> --}}
         </h4>
@@ -12,26 +12,33 @@
         </button>
       </div>
 
-      <form class="create-category" action="{{ route('ajax.createCategory') }}" method="post">
+      <form class="installment-tack" action="{{ route('month.payment.modal') }}" method="post">
         @csrf
       <div class="modal-body">
           <input type="hidden" name="type" value="category">
           <div class="form-group">
-              <label for="installment-customer-id" class="control-label">{{ __('اسم العميل') }}</label>
-              <select name="customer_id" class="form-control" id="installment-customer-id" required>
-                
+              <label for="installment-customer-id-modal" class="control-label">{{ __('اسم العميل') }}</label>
+              <select name="customer_id" class="form-control" id="installment-customer-id-modal" required>
+                @php
+                  $customers = App\Models\Installment::distinct()
+                  ->select('installments.customer_id')
+                  ->get();
+                @endphp
                 <option value="">{{ __('أختار من العملاء') }}</option>
+                @foreach ($customers as $customer)
+                  <option value="{{ $customer->customer_id }}">{{ $customer->customer->title }}</option>
+                @endforeach
               </select>
           </div>
           <div class="form-group">
-              <label for="installment-item-id" class="control-label">{{ __('الجهاز') }}</label>
-              <select name="item_id" class="form-control" id="installment-item-id" required>
+              <label for="installment-item-id-model" class="control-label">{{ __('الصنف') }}</label>
+              <select name="installment_item_id" class="form-control" id="installment-item-id-model" required>
                 <option value="">{{ __('اختر من الاجهزة') }}</option>
               </select>
           </div>
           <div class="form-group">
-              <label for="barcode" class="control-label">{{ __('دفع قسط شهر') }}</label>
-              <select name="customer_id" class="form-control" id="installment-customer-id" required>
+              <label for="installment-month-id-model" class="control-label">{{ __('دفع قسط شهر') }}</label>
+              <select name="month_id" class="form-control" id="installment-month-id-model" required>
                 <option value="">{{ __('اختار الشهر') }}</option>
               </select>
           </div>

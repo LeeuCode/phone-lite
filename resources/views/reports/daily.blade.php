@@ -275,7 +275,7 @@
 	      locale: {
 	        format: 'YYYY-MM-DD'
 	      }
-	    })
+	    });
 		})(jQuery)
 	</script>
 @endsection

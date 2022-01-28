@@ -100,7 +100,42 @@ class InstallmentsController extends Controller
       return view('installments.view', ['installment' => $installment]);
     }
 
+    public function monthModal(Request $request)
+    {
+      // dd($request->id);
+      $this->debtInstallment($request->id);
+    }
+
     public function debtPayment($id)
+    {
+      $this->debtInstallment($id);
+    }
+
+    public function print($id)
+    {
+      $month = InstallmentMonth::find($id);
+      $installment = Installment::find($month->installment_id);
+      $remaining_installments = $installment->remaining_installments;
+      $premiums_paid = $installment->premiums_paid;
+
+      return response()->json([
+        'installment_customer_name' => $installment->customer->title,
+        'installment_customer_id' => $installment->customer->id,
+        'date' => date('d/m/Y', strtotime(($month->updated_at))),
+        'time' => date('h:i a', strtotime(($month->updated_at))),
+        'installment_item_name' => $installment->item->title,
+        'installment_quantity' => $installment->quantity,
+        'installment_selling_price' => $installment->installment_selling_price,
+        'remaining_installments' => ($installment->number_months - $premiums_paid),
+        'premiums_paid' => $premiums_paid,
+        'renewal_date' => $month->renewal_date,
+        'monthly_installment' => $month->monthly_installment,
+        'number_months' => $installment->number_months,
+        'installment_total' => ($installment->installment_selling_price*$installment->quantity)
+      ]);
+    }
+
+    protected function debtInstallment($id)
     {
       $month = InstallmentMonth::find($id);
 
@@ -115,13 +150,23 @@ class InstallmentsController extends Controller
       ]);
 
       InstallmentMonth::where('id',$id)->update([
-        'state' =>1
+        'state' => 1
       ]);
 
       return response()->json([
-        'renewal_date' => $month->renewal_date,
+        'installment_customer_name' => $installment->customer->title,
+        'installment_customer_id' => $installment->customer->id,
+        'date' => date('d/m/Y', strtotime(($month->updated_at))),
+        'time' => date('h:i a', strtotime(($month->updated_at))),
+        'installment_item_name' => $installment->item->title,
+        'installment_quantity' => $installment->quantity,
+        'installment_selling_price' => $installment->installment_selling_price,
         'remaining_installments' => $remaining_installments,
         'premiums_paid' => $premiums_paid,
+        'renewal_date' => $month->renewal_date,
+        'monthly_installment' => $month->monthly_installment,
+        'number_months' => $installment->number_months,
+        'installment_total' => ($installment->installment_selling_price*$installment->quantity)
       ]);
     }
 }

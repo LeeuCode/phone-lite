@@ -18,7 +18,7 @@
 					<input type="hidden" name="type" value="unity">
           <div class="form-group">
   						<label for="title" class="control-label">{{ __('اسم الوحدة') }}</label>
-              <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('اكتب اسم الوحدة هنا') }}">
+              <input type="text" name="title" autofocus class="form-control" id="title" placeholder="{{ __('اكتب اسم الوحدة هنا') }}">
 		      </div>
 
           <button type="submit" class="btn btn-primary">{{ __('حفظ') }}</button>

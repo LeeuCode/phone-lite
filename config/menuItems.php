@@ -26,7 +26,7 @@ return [
       ],
       'unities' => [
         'name' => 'الوحدات',
-        'route' => 'unites'
+        'route' => 'unities'
       ],
       'models' => [
         'name' => 'الموديلات',
@@ -134,7 +134,7 @@ return [
       ],
       'permissions' => [
         'name' => 'صلاحية المستخدمين',
-        'route' => 'link'
+        'route' => 'permissions',
       ],
     ]
   ],

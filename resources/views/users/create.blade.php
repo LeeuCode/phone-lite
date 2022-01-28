@@ -18,7 +18,17 @@
       </div>
 			<!-- form start -->
       <div class="card-body">
-				<form class="form-horizontal" action="{{ route('installments.store') }}" method="post">
+				@if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+				
+				<form class="form-horizontal" action="{{ route('users.employee.store') }}" method="post">
 					@csrf
 
 					<div class="form-group row">
@@ -36,16 +46,16 @@
 					</div>
 
           <div class="form-group row">
-							<label for="balance" class="col-md-3 control-label">{{ __('كلمة السر') }}</label>
+							<label for="password" class="col-md-3 control-label">{{ __('كلمة السر') }}</label>
               <div class="col-md-8">
                 <input type="password" name="password" class="form-control" id="password">
 					    </div>
 					</div>
 
           <div class="form-group row">
-							<label for="balance" class="col-md-3 control-label">{{ __('تاكيد كلمة السر') }}</label>
+							<label for="password_confirmation" class="col-md-3 control-label">{{ __('تاكيد كلمة السر') }}</label>
               <div class="col-md-8">
-                <input type="password" name="password_confirmation" class="form-control" id="password">
+                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
 					    </div>
 					</div>
 

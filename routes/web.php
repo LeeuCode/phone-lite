@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::group(['middleware' => ['auth']], function(){
 
   Route::get('/', function () {
@@ -81,10 +80,15 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('ajax/devices', 'AjaxController@getDvices')->name('ajax.getDvices');
   Route::get('ajax/customers', 'AjaxController@getCustomers')->name('ajax.getCustomers');
   Route::get('ajax/suppliers', 'AjaxController@getSuppliers')->name('ajax.getSuppliers');
+  Route::get('ajax/installment/user', 'AjaxController@getInstallmentByCustomer')->name('ajax.installment.user');
+  Route::get('ajax/installment/months', 'AjaxController@getMonthsByInstallment')->name('ajax.months.installment');
+  Route::get('ajax/invoice/remaining/amount', 'AjaxController@getInvoiceRemainingAmount')
+  ->name('ajax.invoice.remaining.amount');
 
 
   Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
   Route::post('ajax/createUser', 'AjaxController@createUser')->name('ajax.createUser');
+  Route::post('ajax/invoice/dues', 'AjaxController@invoiceDues')->name('ajax.invoice.dues');
 
   /*================================
   ||------ [Invoices Routes] ------||
@@ -96,6 +100,8 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('invoice/bounce', 'InvoicesController@sale')->name('invoices.bounce');
 
   Route::post('invoice/save', 'InvoicesController@save')->name('invoice.save');
+  Route::post('invoice/dues/pay', 'InvoicesController@invoiceDuesPay')->name('invoice.dues.pay');
+
 
   /*================================
   ||----- [Customers Routes] ------||
@@ -121,7 +127,10 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('installments/create', 'InstallmentsController@create')->name('installments.create');
   Route::get('installments/view/{id}', 'InstallmentsController@view')->name('installments.view');
 
+  Route::get('installment/month/print/{id}', 'InstallmentsController@print')->name('installments.print');
+
   Route::post('installments/srore', 'InstallmentsController@store')->name('installments.store');
+  Route::post('installment/month/debt/payment/modal', 'InstallmentsController@monthModal')->name('month.payment.modal');
   Route::post('installments/debt/payment/{id}', 'InstallmentsController@debtPayment')->name('installments.debt.payment');
 
   /*================================
@@ -131,12 +140,17 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('users/employee/create', 'UsersController@create')->name('users.employee.create');
   Route::get('users/employee/edit/{id}', 'UsersController@edit')->name('users.employee.edit');
 
+  Route::post('users/employee/store', 'UsersController@store')->name('users.employee.store');
+
   /*================================
   ||----- [Permission Routes] -----||
   =================================*/
+  Route::get('permissions', 'PermissionController@index')->name('permissions');
   Route::get('permission/create', 'PermissionController@create')->name('permission.create');
+  Route::get('permission/edit/{id}', 'PermissionController@edit')->name('permission.edit');
 
   Route::post('permission/store', 'PermissionController@store')->name('permission.store');
+  Route::post('permission/update/{id}', 'PermissionController@update')->name('permission.update');
 
   /*================================
   ||------ [Reports Routes] -------||
@@ -154,5 +168,3 @@ Route::group(['middleware' => ['auth']], function(){
 });
 
 Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');

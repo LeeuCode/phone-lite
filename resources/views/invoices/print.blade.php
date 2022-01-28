@@ -38,17 +38,19 @@
            </tr>
        </tbody>
        <tfoot>
-         {{-- <tr>
-            <th class=""></th>
-             <th class=""></th>
-             <th class="">{{ __('') }}</th>
-             <th ><span class="totalPrint" ></span>ج</th>
-         </tr> --}}
          <tr>
             <th class=""></th>
              <th class=""></th>
-             <th class="">الإجمالي</th>
-             <th ><span class="totalPrint" ></span>ج</th>
+             <th class="">{{ __('نسبة الخصم') }}</th>
+             <th ><span class="discount-amount" >0</span>ج</th>
+         </tr>
+         <tr>
+            <th class=""></th>
+             <th class=""></th>
+             <th class="">{{ __('الإجمالي') }}</th>
+             <th class="">
+               <span class="totalPrint" ></span>ج
+             </th>
          </tr>
        </tfoot>
    </table>

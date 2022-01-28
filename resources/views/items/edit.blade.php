@@ -26,6 +26,11 @@
               <div class="col-md-4">
                 <input type="number" name="barcode" class="form-control text-center" value="{{ $item->barcode }}" id="barcode" placeholder="00">
 			        </div>
+							<div class="col-md-2 p-0 d-flex">
+								<button id="barcode_btn" type="button" class="add-cat btn bg-light">
+									<i class="fas fa-barcode" ></i>
+								</button>
+							</div>
 		      </div>
 
 					<div class="form-group row">
@@ -46,6 +51,11 @@
 								@endif
               </select>
 						</div>
+						<div class="col-md-2 p-0 d-flex">
+							<button type="button" class="add-cat btn bg-light" data-title="{{ __('أضف قسم جديد') }}" data-type="category" data-toggle="modal" data-target="#add-category">
+								<i class="fas fa-plus" ></i>
+							</button>
+						</div>
 					</div>
 
           <div class="form-group row">
@@ -58,6 +68,11 @@
 										<option value="" selected>{{ __('اختار الموديل') }}...</option>
 									@endif
 								</select>
+						</div>
+						<div class="col-md-2 p-0 d-flex">
+							<button type="button" class="add-cat btn bg-light" data-title="{{ __('أضف موديل جديد') }}" data-type="model" data-toggle="modal" data-target="#add-category">
+								<i class="fas fa-plus" ></i>
+							</button>
 						</div>
 					</div>
 
@@ -73,16 +88,21 @@
 								@endif
               </select>
 						</div>
+						<div class="col-md-2 p-0 d-flex">
+							<button type="button" class="add-cat btn bg-light" data-title="{{ __('أضف الوحدة') }}" data-type="unity" data-toggle="modal" data-target="#add-category">
+								<i class="fas fa-plus" ></i>
+							</button>
+						</div>
 					</div>
 
-          <div class="form-group row">
+          {{-- <div class="form-group row">
 						<label for="type" class="col-md-2 control-label">{{ __('حالة المنتج') }}</label>
             <div class="col-md-4">
               <select name="type" class="form-control" id="type">
               	<option value="" selected>{{ __('اختار حالة المنتج') }}...</option>
               </select>
 						</div>
-					</div>
+					</div> --}}
 
           <div class="form-group row">
 							<label for="warranty_period" class="col-md-2 control-label">{{ __('مدة الضمان') }}</label>
@@ -112,19 +132,21 @@
 			        </div>
 		      </div>
 
-          <div class="form-group row">
-  						<label for="expiration_date" class="col-md-2 control-label">{{ __('تاريخ انتهاء الصلحيه') }}</label>
+					{{-- <div class="form-group row">
+  						<label for="store_balance" class="col-md-2 control-label">{{ __('رصيد اول المدة') }}</label>
               <div class="col-md-4">
-                <input type="number" name="expiration_date" value="{{ $item->expiration_date }}" class="form-control text-center" id="expiration_date" placeholder="00">
+                <input type="number" name="store_balance" class="form-control text-center" id="store_balance" placeholder="00">
 			        </div>
-		      </div>
+		      </div> --}}
 
-					<button type="submit" class="btn btn-success">{{ __('تعديل') }}</button>
+					<button type="submit" class="btn btn-success">{{ __('تعديل F1') }}</button>
 					</form>
       </div>
 		  <!-- /.card-body -->
 		</div>
 	</div>
+
+	@include('components.add-category-model')
 @endsection
 
 @section('js')
@@ -138,13 +160,28 @@
 
 			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
 
-
 			$(window).keydown(function(event){
 		    if(event.keyCode == 13) {
 		      event.preventDefault();
 		      return false;
 		    }
 		  });
+
+			$('body').on('keydown', function(e){
+				if (e.keyCode == 112) {
+					e.preventDefault();
+
+					var form = $('#save-store-item');
+
+					// Trigger HTML5 validity.
+					var reportValidity = form[0].reportValidity();
+
+					// Then submit if form is OK.
+					if(reportValidity){
+					    form.submit();
+					}
+				}
+			});
 		})(jQuery)
 	</script>
 @endsection

@@ -70,11 +70,11 @@ class ItemsController extends Controller
     {
       $items = Item::where('publish', 1);
 
-      $request = $request->except(['title']);
-
       if (isset($request->title)) {
         $items->where('title', 'like','%'.$request->title.'%');
       }
+      
+      $request = $request->except(['title']);
 
       // Get all request and loop to search
       foreach ($request as $key => $value) {

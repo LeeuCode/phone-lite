@@ -44,8 +44,6 @@
 				<table class="table text-center" >
 					<thead>
 						<tr>
-							{{-- <th>{{ __('اسم العميل') }}</th> --}}
-							{{-- <th>{{ __('رقم الهاتف') }}</th> --}}
 							<th>{{ __('الصنف') }}</th>
 							<th>{{ __('الكمية المباعة') }}</th>
 							<th>{{ __('عدد الاشهر') }}</th>
@@ -59,10 +57,6 @@
 						@if (count($installments) > 0)
 							@foreach ($installments as $installment)
 								<tr>
-									{{-- <td>
-										<a href="{{ route('installment.user', ['id'=> $installment->customer_id]) }}">{{ $installment->customer->title }}</a>
-									</td> --}}
-									{{-- <td>{{ $installment->customer->phone }}</td> --}}
 									<td>
 										@php
 											$itemConut = $installment->item()->count();

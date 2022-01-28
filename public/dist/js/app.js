@@ -6,7 +6,7 @@ $.AdminLTESidebarTweak.options = {
     //Removes the transition after page reload.
 };
 
-$(function () {
+(function ($) {
     "use strict";
 
     $("body").on("collapsed.pushMenu", function(){
@@ -35,8 +35,60 @@ $(function () {
             }
         }
     }
-});
 
+    $(document).on('click', '.add-cat',function(){
+      var title = $(this).data('title'),
+          type = $(this).data('type');
+
+      $('.title').text(title);
+      $('input[name=type]').val(type);
+    });
+
+    $(document).on('click', '#barcode_btn', function(e){
+       e.preventDefault();
+       var val1 = Math.floor(1000 + Math.random() * 999);
+       var val2 = Math.floor(100 + Math.random() * 99);
+       var barcodeNum = '7'+val1+val2;
+       $('#barcode').val(barcodeNum);
+    });
+
+    $(document).on('click', '.change-mode', function (e) {
+      e.preventDefault();
+      var mode = $(this).data('mode');
+
+      if (mode == 'dark') {
+        setCookie('body-mode', 'dark-mode');
+        setCookie('nav-mode', 'navbar-dark');
+
+        $('.dark-mode-nav').addClass('d-none');
+        $('.white-mode-nav').removeClass('d-none');
+      } else {
+        setCookie('body-mode', '');
+        setCookie('nav-mode', 'navbar-white navbar-light');
+
+        $('.dark-mode-nav').removeClass('d-none');
+        $('.white-mode-nav').addClass('d-none');
+      }
+
+      $('body').removeClass('dark-mode').addClass(getCookie('body-mode'));
+      $('.navbar').removeClass('navbar-dark').removeClass('navbar-white').removeClass('navbar-light').addClass(getCookie('nav-mode'));
+    });
+
+    $('body').addClass(getCookie('body-mode'));
+
+    if (getCookie('nav-mode') == 'navbar-dark' || getCookie('nav-mode') == '' ) {
+      $('.navbar').removeClass('navbar-white').removeClass('navbar-light').addClass(getCookie('nav-mode'));
+
+      $('.dark-mode-nav').addClass('d-none');
+      $('.white-mode-nav').removeClass('d-none');
+
+      console.log(getCookie('nav-mode'));
+    } else {
+      $('.dark-mode-nav').removeClass('d-none');
+      $('.white-mode-nav').addClass('d-none');
+    }
+
+})(jQuery);
 
 function createTr(url,selector) {
   var barcode = selector,
@@ -119,6 +171,10 @@ function discountTotal() {
   $('.total_discount').val(0);
   if (discount >= 0 || total >= 0){
     $('.total_discount').val(total-discount);
+    $('.discount-amount').text(discount);
+
+    $('#total_tax, .total, #residual').val(totalTax());
+    $('.total, .totalPrint').text(totalTax());
   }
 }
 
@@ -129,6 +185,10 @@ function disPercentTotal() {
   $('.total_discount').val(0);
   if (discount > 0){
     $('.total_discount').val(total-discount);
+    $('.discount-amount').text(discount);
+
+    $('#total_tax, .total, #residual').val(totalTax());
+    $('.total, .totalPrint').text(totalTax());
   }
 }
 
@@ -254,8 +314,7 @@ function monthlyInstallment() {
  * @param selector
  * @param url
  */
-function select2Ajax(selector,url)
-{
+function select2Ajax(selector,url){
     $(selector).select2({
         dir: "rtl",
         ajax: {
@@ -302,4 +361,44 @@ function select2Ajax(selector,url)
     //         store.hide();
     //     }
     // });
+}
+
+function setInstallmentPrintData(data) {
+  $('#installment_customer_name').text(data.installment_customer_name);
+  $('#installment_customer_id').text(data.installment_customer_id);
+  $('.date').text(data.date);
+  $('.time').text(data.time);
+  $('#installment_item_name').text(data.installment_item_name);
+  $('#installment_quantity').text(data.installment_quantity);
+  $('#selling_price').text(data.installment_selling_price);
+  $('#installment_total').text(data.installment_selling_price);
+  $('.remaining-installments').text(data.remaining_installments);
+  $('#installment_number_months').text(data.number_months);
+  $('.remaining_installments').val(data.remaining_installments);
+  $('.premiums-paid').text(data.premiums_paid);
+  $('#premiums_paid').val(data.premiums_paid);
+  $('.monthly_installment').text(data.monthly_installment);
+  $('.renewal_date').text(data.renewal_date);
+}
+
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }

@@ -18,7 +18,7 @@
 					<input type="hidden" name="type" value="model">
           <div class="form-group">
   						<label for="title" class="control-label">{{ __('اسم الموديل') }}</label>
-              <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('اكتب اسم الموديل هنا') }}">
+              <input type="text" autofocus name="title" class="form-control" id="title" placeholder="{{ __('اكتب اسم الموديل هنا') }}">
 		      </div>
 
           <button type="submit" class="btn btn-primary">{{ __('حفظ') }}</button>

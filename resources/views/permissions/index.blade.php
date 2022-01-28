@@ -4,14 +4,8 @@
 	{{ __('الأصناف') }}
 @endsection
 
-@section('css')
-	<!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endsection
-
 @section('content')
-	<a href="{{ route('item.create') }}" class="btn btn-info mt-3 mr-3" >
+	{{-- <a href="{{ route('item.create') }}" class="btn btn-info mt-3 mr-3" >
 		<i class="fa fa-plus" ></i>
 		{{ __('أضافة صنف جديد') }}
 	</a>
@@ -35,92 +29,32 @@
         </a>
       </li>
     </ul>
-  </div>
+  </div> --}}
 
-	<div class="col-md-12 mt-3">
+	<div class="col-md-6 mr-auto ml-auto mt-3">
 		<div class="card">
 			<div class="card-body p-0">
 				<table class="table" >
 					<thead>
 						<tr>
-							<th>{{ __('باركود الصنف') }}</th>
-							<th>{{ __('اسم الصنف') }}</th>
-							<th>{{ __('القسم') }}</th>
-							<th>{{ __('الموديل') }}</th>
-							<th>{{ __('وحدة المنتج') }}</th>
-							<th>{{ __('الكمية المتاحه') }}</th>
-							<th>{{ __('سعر البيع') }}</th>
-							<th>{{ __('متوسط سعر البيع') }}</th>
+							<th>{{ __('الصلاحية') }}</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						@foreach ($items as $item)
+						@foreach ($permissions as $permission)
 							<tr>
-								<td>{{ $item->barcode }}</td>
-								<td>{{ $item->title }}</td>
+								<td>{{ $permission->title }}</td>
 								<td>
-									@php
-										$catConut = $item->category()->count();
-									@endphp
-									@if ($catConut)
-										{{ $item->category->title }}
-									@else
-										{{ __('لا يتوفر') }}
-									@endif
-								</td>
-								<td>
-									@php
-										$modelsConut = $item->models()->count();
-									@endphp
-									@if ($modelsConut)
-									{{  $item->models->title }}
-									@else
-										{{ __('لا يتوفر') }}
-									@endif
-								</td>
-								<td>
-									@php
-										$unitiesConut = $item->unities()->count();
-									@endphp
-									@if ($unitiesConut)
-									{{  $item->unities->title }}
-									@else
-										{{ __('لا يتوفر') }}
-									@endif
-								</td>
-								<td>{{ $item->store_balance }}</td>
-								<td>{{ $item->selling_price }}</td>
-								<td>{{ $item->average_price }}</td>
-								<td>
-									<form action="{{ route('item.status', ['id' => $item->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post">
+									<form action="{{ route('item.status', ['id' => $permission->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post">
 										@csrf
-										<a href="{{ route('item.edit', ['id' => $item->id]) }}" class="btn btn-outline-info" >
+										<a href="{{ route('permission.edit', ['id' => $permission->id]) }}" class="btn btn-outline-info" >
 											<i class="fa fa-edit" ></i>
-										</a>
-										<a href="#" data-id="{{ $item->id }}" class="print-barcode btn btn-outline-warning" >
-											<i class="fa fa-barcode" ></i>
 										</a>
 										<button type="submit" class="btn btn-outline-danger" >
 											<i class="fa fa-eye-slash" ></i>
 										</button>
 									</form>
-
-									<div id="div-barcode-{{ $item->id }}" class="d-none"  style="width:100%">
-										<p style="width:100%;text-align:center;margin:0;font-size:10px">{{ $item->title }}</p>
-										{{-- <svg class="barcode" style="width:100%;text-align:center;"
-											jsbarcode-format="CODE128"
-											jsbarcode-value="123456789012"
-											jsbarcode-textmargin="0"
-											jsbarcode-fontoptions="bold"
-											>
-										</svg> --}}
-										<img class="barcode" style="width:100%"
-										jsbarcode-format="CODE128"
-										jsbarcode-value="123456789012"
-										jsbarcode-textmargin="0"
-										jsbarcode-fontoptions="bold" />
-									</div>
 								</td>
 							</tr>
 						@endforeach
@@ -128,7 +62,7 @@
 					<tfoot>
 						<tr>
 							<td colspan="9">
-								{{ $items->links() }}
+								{{ $permissions->links() }}
 							</td>
 						</tr>
 					</tfoot>
@@ -193,46 +127,5 @@
 		</div>
 		<!-- /.modal -->
 	</form>
-
-@endsection
-
-@section('js')
-	<!-- Select2 -->
-	<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-	<!-- JsBarcode -->
-	<script src="{{ asset('dist/js/JsBarcode.all.min.js') }}"></script>
-	<!-- printThis -->
-	<script src="{{ asset('dist/js/printThis.js') }}" charset="utf-8"></script>
-
-	<script>
-		(function($){
-			select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
-
-			select2Ajax('#model', '{{ route('ajax.getModels') }}');
-
-			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
-
-			JsBarcode(".barcode").init();
-
-			$(document).on('click', '.print-barcode', function (e) {
-				e.preventDefault();
-				var id = $(this).data('id');
-
-				$("#div-barcode-"+id).printThis({
-					debug: true,
-					importCSS: false,
-					// loadCSS: "{{ asset('dist/css/print-installments.css') }}",
-					// header: "<h1>Look at all of my kitties!</h1>"
-				});
-			});
-
-			// $(window).keydown(function(event){
-		  //   if(event.keyCode == 13) {
-		  //     event.preventDefault();
-		  //     return false;
-		  //   }
-		  // });
-		})(jQuery)
-	</script>
 
 @endsection

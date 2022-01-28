@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InstallmentMonth;
 use Illuminate\Http\Request;
+use App\Models\Installment;
 use App\Models\ItemPrice;
 use App\Models\Taxonomy;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Item;
 
 class AjaxController extends Controller
@@ -155,7 +158,7 @@ class AjaxController extends Controller
     $search = $request->get('search');
 
     /* ====== Get all categories name where like search input value. ====== */
-    $data = Item::where('publish', 1)->paginate(7);
+    $data = Item::where('publish', 1)->where('title', 'like', '%' . $search . '%')->paginate(7);
 
     /* ====== Return store names as json. ====== */
     return response()->json(
@@ -184,5 +187,46 @@ class AjaxController extends Controller
       'id' => $cat->id,
       'status' => 200
     ]);
+  }
+
+  public function getInstallmentByCustomer(Request $request)
+  {
+    echo '<option value="">'.__('اختر من الاجهزة') .'</option>';
+
+    $installments = Installment::where('customer_id', $request->id)->get();
+
+    foreach ($installments as $installment) {
+      echo '<option value="'.$installment->id.'">'. $installment->item->title .'</option>';
+    }
+
+  }
+
+  public function getMonthsByInstallment(Request $request)
+  {
+    echo '<option value="">'. __('اختار الشهر') .'</option>';
+
+    $months = InstallmentMonth::where('installment_id', $request->id)
+                    ->where('state', 0)
+                    ->get();
+
+    foreach ($months as $month) {
+      echo '<option value="'.$month->id.'">'. $month->renewal_date .'</option>';
+    }
+
+  }
+
+  public function getInvoiceRemainingAmount(Request $request)
+  {
+    $invoice = Invoice::where('id', $request->id)->first();
+
+    return response()->json([
+      'remaining_amount' => ($invoice->total_bill - $invoice->paid),
+      'status' => 200
+    ]);
+  }
+
+  public function checkBrcode($id)
+  {
+    // code...
   }
 }
