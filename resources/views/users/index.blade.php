@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-	<a href="{{ route('item.create') }}" class="btn btn-info mt-3 mr-3" >
+	<a href="{{ route('users.employee.create') }}" class="btn btn-info mt-3 mr-3" >
 		<i class="fa fa-plus" ></i>
 		{{ __('أضافة مستخدم جديد') }}
 	</a>

@@ -45,15 +45,22 @@
               @foreach (permissions() as $key => $value)
                 <tr>
                   <td width="10">
-                    <div class="form-group">
+										<div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="{{ $key }}">
-                        <label class="custom-control-label" for="{{ $key }}"></label>
+                        <input type="checkbox" class="custom-control-input" id="{{ $key. '_all' }}">
+                        <label class="custom-control-label" for="{{ $key. '_all' }}"></label>
                       </div>
                     </div>
                   </td>
                   <td>{{ $value['name'] }}</td>
                   <td class="row">
+										{{-- <div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="{{ $key }}" {!! (getPermission($groupPermission->id, $key)) ? 'checked' : '' !!} class="custom-control-input" id="{{ $key }}">
+                        <label class="custom-control-label" for="{{ $key }}">{{ __('إظهار الكل') }}</label>
+                      </div>
+                    </div>
+
                     <div class="form-group">
                       <div class="custom-control custom-switch">
                         <input type="checkbox" {!! (getPermission($groupPermission->id, $key.'_create')) ? 'checked' : '' !!} name="{{ $key.'_create' }}" class="custom-control-input" id="{{ $key.'_create' }}">
@@ -80,7 +87,12 @@
                         <input type="checkbox" name="{{ $key.'_delete' }}" {!! (getPermission($groupPermission->id, $key.'_delete')) ? 'checked' : '' !!} class="custom-control-input" id="{{ $key.'_delete' }}">
                         <label class="custom-control-label" for="{{ $key.'_delete' }}">{{ __('حذف') }}</label>
                       </div>
-                    </div>
+                    </div> --}}
+										@include('components.permission-items',[
+											'input' => $key,
+											'group' => $groupPermission->id,
+											'items' => $value['roles']
+										])
                   </td>
                 </tr>
               @endforeach

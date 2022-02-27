@@ -1,7 +1,7 @@
 @extends('stander')
 
 @section('title')
-	{{ __('الأصناف') }}
+	{{ __('صلاحيات المستخدمين') }}
 @endsection
 
 @section('content')
@@ -32,6 +32,10 @@
   </div> --}}
 
 	<div class="col-md-6 mr-auto ml-auto mt-3">
+		<a href="{{ route('permission.create') }}" class="btn btn-info mt-3 mb-3" >
+		 <i class="fa fa-plus" ></i>
+		 {{ __('أضف صلاحية جديدة') }}
+		</a>
 		<div class="card">
 			<div class="card-body p-0">
 				<table class="table" >

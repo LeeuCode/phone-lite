@@ -54,13 +54,19 @@
                   <td width="10">
                     <div class="form-group">
                       <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="{{ $key }}">
-                        <label class="custom-control-label" for="{{ $key }}"></label>
+                        <input type="checkbox" class="custom-control-input" id="{{ $key. '_all' }}">
+                        <label class="custom-control-label" for="{{ $key. '_all' }}"></label>
                       </div>
                     </div>
                   </td>
                   <td>{{ $value['name'] }}</td>
                   <td class="row">
+										<div class="form-group">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="{{ $key }}" class="custom-control-input" id="{{ $key }}">
+                        <label class="custom-control-label" for="{{ $key }}">{{ __('إظهار الكل') }}</label>
+                      </div>
+                    </div>
                     <div class="form-group">
                       <div class="custom-control custom-switch">
                         <input type="checkbox" name="{{ $key.'_create' }}" class="custom-control-input" id="{{ $key.'_create' }}">

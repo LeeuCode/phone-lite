@@ -12,7 +12,7 @@ return [
     'icon' => 'fas fa-database',
     'route' => 'items',
     'subitems' => [
-      'all_items' => [
+      'items' => [
         'name' => 'كل الاصناف بالنظام',
         'route' => 'items'
       ],
@@ -43,7 +43,6 @@ return [
     'icon' => 'fas fa-file-invoice-dollar',
     'route' => 'invoices.purchase'
   ],
-
   'sale_invoice' => [
     'name' => 'فاتورة بيع',
     'icon' => 'fas fa-file-invoice',

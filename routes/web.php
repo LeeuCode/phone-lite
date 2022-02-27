@@ -20,7 +20,6 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||-------- [Items Routes] -------||
   =================================*/
-
   Route::get('items', 'ItemsController@index')->name('items');
   Route::get('item/create', 'ItemsController@create')->name('item.create');
   Route::get('item/edit/{id}', 'ItemsController@edit')->name('item.edit');
@@ -35,10 +34,10 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||----- [Categories Routes] -----||
   =================================*/
-
   Route::get('categories', 'CategoriesController@index')->name('categories');
   Route::get('unities', 'CategoriesController@unities')->name('unities');
   Route::get('models', 'CategoriesController@models')->name('models');
+
   Route::post('category/store', 'CategoriesController@store')->name('category.store');
   Route::post('category/update/{id}', 'CategoriesController@update')->name('category.update');
   Route::post('category/status/{id}', 'CategoriesController@status')->name('category.status');
@@ -46,7 +45,6 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||---- [Maintenances Routes] ----||
   =================================*/
-
   Route::get('maintenances', 'MaintenanceController@index')->name('maintenances');
   Route::get('maintenance/receipt', 'MaintenanceController@receipt')->name('maintenance.receipt');
   Route::get('maintenance/edit/{id}', 'MaintenanceController@edit')->name('maintenance.edit');
@@ -70,7 +68,6 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||-------- [Ajax Routes] --------||
   =================================*/
-
   Route::get('ajax/items', 'AjaxController@getItems')->name('ajax.getItems');
   Route::get('ajax/item', 'AjaxController@getItem')->name('ajax.getItem');
   Route::get('ajax/categories', 'AjaxController@getCategories')->name('ajax.getCategories');
@@ -84,7 +81,6 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('ajax/installment/months', 'AjaxController@getMonthsByInstallment')->name('ajax.months.installment');
   Route::get('ajax/invoice/remaining/amount', 'AjaxController@getInvoiceRemainingAmount')
   ->name('ajax.invoice.remaining.amount');
-
 
   Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
   Route::post('ajax/createUser', 'AjaxController@createUser')->name('ajax.createUser');
@@ -101,7 +97,6 @@ Route::group(['middleware' => ['auth']], function(){
 
   Route::post('invoice/save', 'InvoicesController@save')->name('invoice.save');
   Route::post('invoice/dues/pay', 'InvoicesController@invoiceDuesPay')->name('invoice.dues.pay');
-
 
   /*================================
   ||----- [Customers Routes] ------||
@@ -126,7 +121,6 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('installments/search', 'InstallmentsController@search')->name('installments.search');
   Route::get('installments/create', 'InstallmentsController@create')->name('installments.create');
   Route::get('installments/view/{id}', 'InstallmentsController@view')->name('installments.view');
-
   Route::get('installment/month/print/{id}', 'InstallmentsController@print')->name('installments.print');
 
   Route::post('installments/srore', 'InstallmentsController@store')->name('installments.store');
@@ -141,6 +135,7 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('users/employee/edit/{id}', 'UsersController@edit')->name('users.employee.edit');
 
   Route::post('users/employee/store', 'UsersController@store')->name('users.employee.store');
+  Route::post('users/employee/update/{id}', 'UsersController@update')->name('users.employee.update');
 
   /*================================
   ||----- [Permission Routes] -----||

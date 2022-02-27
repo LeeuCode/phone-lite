@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Models\GroupPermission;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -18,17 +19,37 @@ class UsersController extends Controller
 
     public function create()
     {
-      return view('users.create');
+      $permissions = GroupPermission::all();
+      return view('users.create', ['permissions' => $permissions]);
     }
 
     public function store(CreateUserRequest $request)
     {
-      return back();
+      $data = $request->except(['_token', 'password_confirmation', 'password']);
+      $data['password'] = Hash::make($request->password);
+
+      User::create($data);
+
+      return redirect()->back()->with('success', __('تم أضافة مستخدم جديد بنجاح!'));
     }
 
     public function edit($id)
     {
       $user = User::find($id);
-      return view('users.edit', ['user' => $user]);
+      $permissions = GroupPermission::all();
+      return view('users.edit', ['user' => $user, 'permissions' => $permissions]);
+    }
+
+    public function update(Request $request, $id)
+    {
+      $data = $request->except(['_token', 'password_confirmation', 'password', 'change_password']);
+
+      if(!is_null($request->change_password)){
+        $data['password'] = Hash::make($request->password);
+      }
+
+      User::where('id', $id)->update($data);
+
+      return redirect()->back()->with('success', __('تم تحديث المستخدم بنجاح!'));
     }
 }

@@ -27,14 +27,14 @@
                 </ul>
             </div>
         @endif
-				
+
 				<form class="form-horizontal" action="{{ route('users.employee.store') }}" method="post">
 					@csrf
 
 					<div class="form-group row">
   						<label for="name" class="col-md-3 control-label">{{ __('اسم المستخدم') }}</label>
               <div class="col-md-8">
-  							<input type="text" name="name" class="form-control" placeholder="{{ __('أكتب اسم المستخدم هنا') }}" required>
+  							<input type="text" name="name" class="form-control" placeholder="{{ __('أكتب اسم المستخدم هنا') }}" required autofocus autocomplete="off">
   						</div>
 		      </div>
 
@@ -62,8 +62,11 @@
 					<div class="form-group row">
 							<label for="quantity" class="col-md-3 control-label">{{ __('الصلاحية') }}</label>
               <div class="col-md-8">
-                <select class="form-control" name="permission">
+                <select class="form-control" name="role">
                   <option value="">{{ __('أختار صلاحية من الصلاحيات المتااحه') }}</option>
+									@foreach ($permissions as $permission)
+										<option value="{{ $permission->id }}">{{ $permission->title }}</option>
+									@endforeach
                 </select>
 					    </div>
 					</div>
