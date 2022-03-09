@@ -122,6 +122,7 @@ function createTr(url,selector) {
     storeBalance(trID);
     itemTotalPrice();
     discountTotal();
+    
     $('#tax_value').val(taxRate());
     $('#total_tax, .total, #residual').val(totalTax());
     $('.total').text(totalTax());
@@ -269,12 +270,13 @@ function priceByType(content,data) {
 function storeBalance(content) {
   var balance = Number(content.find('.store_balance').data('balance')),
       qt = Number(content.find('.qt').val()),
-      invoiceType = $('#invoice_type').val();
+      invoiceType = $('#invoice_type').val(),
+      store_balance = Number(balance-qt);
 
   if (invoiceType == 'purchase' || invoiceType == 'bounce') {
     content.find('.store_balance').val(balance+qt);
   } else {
-    content.find('.store_balance').val(balance-qt);
+    content.find('.store_balance').val(store_balance);
   }
 }
 

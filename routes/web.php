@@ -89,8 +89,10 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||------ [Invoices Routes] ------||
   =================================*/
-  Route::get('invoices/{type}', 'InvoicesController@invoices')->name('invoices');
+  Route::get('invoices/purchases', 'InvoicesController@invoices')->name('invoices.purchases');
+  // Route::get('invoice/{type}', 'InvoicesController@invoice')->name('invoice');
   Route::get('invoice/view/{id}', 'InvoicesController@view')->name('invoices.view');
+  Route::get('invoice/edit/{id}', 'InvoicesController@edit')->name('invoices.edit');
   Route::get('invoice/sale', 'InvoicesController@sale')->name('invoices.sale');
   Route::get('invoice/purchase', 'InvoicesController@purchase')->name('invoices.purchase');
   Route::get('invoice/bounce', 'InvoicesController@sale')->name('invoices.bounce');

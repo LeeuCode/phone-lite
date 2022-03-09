@@ -4,6 +4,14 @@
 	{{ __('فاتورة') }}
 @endsection
 
+@php
+	if (isset($invoice)) {
+      $inv = $invoice;
+    } else {
+      $inv = '';
+    }
+@endphp
+
 @section('content')
 	<form id="invoice-save" class="w-100 row" action="{{ route('invoice.save') }}" method="post">
 		@include('components.invoice-header', ['id' => $id])
@@ -17,6 +25,27 @@
 					</thead>
 					<tbody>
 						@include('components.invoice-item-clone')
+
+                        {{-- @if ($invoiceItem) --}}
+                        @foreach ($invoiceItem as $item)
+                            <tr id="{{ $item->item->barcode }}" class="items">
+                                <td class="text-center d-none"><input type="hidden" name="item[id][]" class="form-control item_id w-100 border-0" readonly></td>
+                                <td style="width:15%" class="text-center barcode">{{ $item->item->barcode }}</td>
+                                <td style="width:25%" class="text-center"><input type="text" class="form-control p-0 title border-0 text-center" value="{{ $item->item->title }}" readonly></td>
+                                <td style="width:15%" class="text-center"><input type="number" name="item[store_balance][]" value="{{ $item->store_balance }}" class="form-control store_balance w-100 border-0" data-balance="{{ $item->item->store_balance - $item->quantity }}" readonly></td>
+                                <td class="text-center purchasing" {!! (getVal($inv,'invoice_type') != 'purchase' && !$show) ? 'style="display: none;"' : '' !!}><input type="number" name="item[purchasing_price][]" value="{{ $item->purchasing_price }}" class="form-control purchasing_price w-100 {!! (getVal($inv,'invoice_type') != 'purchase' && !$show) ? 'border-0' : '' !!}" {!! (getVal($inv,'invoice_type') != 'purchase' && !$show) ? 'readonly' : '' !!} ></td>
+                                <td class="text-center"><input type="number" name="item[selling_price][]" value="{{ $item->selling_price }}" class="form-control price w-100 border-0" readonly></td>
+                                <td >
+                                <input type="number" name="item[qt][]" min="1" value="{{ $item->quantity }}" class="form-control form-control-sm text-center qt" placeholder="00">
+                                </td>
+                                <td class="text-center col-md-1"><input type="number" name="item[item_total][]" value="{{ $item->total }}" class="form-control w-100 item-total border-0 p-0 text-center" readonly></td>
+                                <td>
+                                <button type="button" class="btn btn-sm btn-danger remove-item" name="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                </td>
+                            </tr>
+                        @endforeach
 					</tbody>
 				</table>
 				{{-- </div> --}}

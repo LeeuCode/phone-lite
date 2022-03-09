@@ -8,6 +8,7 @@
 	<!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
 
 @section('content')
@@ -22,19 +23,31 @@
 	</a>
 
 	<div class="col-md-12 mt-3">
-    <ul class="nav">
-      <li class="nav-item">
-        <a class="p-1 f-12" href="{{ route('items') }}">
-          <small>{{ __('كل الأصناف') }} ({{ DB::table('items')->where('publish', 1)->count() }})</small>
-        </a>
-      </li>
-      |
-      <li class="nav-item ">
-        <a class="p-1 text-danger" href="{{ route('installment.paids') }}">
-          <small>{{ __('الأصناف المحذوفه') }} ({{ DB::table('items')->where('publish', 0)->count() }})</small>
-        </a>
-      </li>
-    </ul>
+		<ul class="nav">
+			<li class="nav-item mr-2">
+				<div class="input-group input-group-sm">
+					<select id="select-action" name="" class="form-control">
+						<option value="">{{ __('اختار الاجراء') }}</option>
+						<option value="edit">{{ __('تحرير') }}</option>
+						<option value="delete">{{ __('حذف') }}</option>
+					</select>
+					<span class="input-group-append">
+					<button type="button" class="apply-action btn btn-outline-primary btn-flat">{{ __('تطبيق') }}</button>
+					</span>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a class="p-1 f-12" href="{{ route('items') }}">
+				<small>{{ __('كل الأصناف') }} ({{ DB::table('items')->where('publish', 1)->count() }})</small>
+				</a>
+			</li>
+			|
+			<li class="nav-item ">
+				<a class="p-1 text-danger" href="{{ route('installment.paids') }}">
+				<small>{{ __('الأصناف المحذوفه') }} ({{ DB::table('items')->where('publish', 0)->count() }})</small>
+				</a>
+			</li>
+		</ul>
   </div>
 
 	<div class="col-md-12 mt-3">
@@ -43,6 +56,13 @@
 				<table class="table" >
 					<thead>
 						<tr>
+							<th>
+								<div class="icheck-primary d-inline">
+									<input type="checkbox" id="checkAll">
+									<label for="checkAll">
+									</label>
+								</div>
+							</th>
 							<th>{{ __('باركود الصنف') }}</th>
 							<th>{{ __('اسم الصنف') }}</th>
 							<th>{{ __('القسم') }}</th>
@@ -57,6 +77,13 @@
 					<tbody>
 						@foreach ($items as $item)
 							<tr>
+								<td>
+									<div class="icheck-primary d-inline">
+										<input class="item" type="checkbox" data-text={{ $item->title }} value="{{ $item->id }}" id="id-{{ $item->id }}">
+										<label for="id-{{ $item->id }}">
+										</label>
+									</div>
+								</td>
 								<td>{{ $item->barcode }}</td>
 								<td>{{ $item->title }}</td>
 								<td>
@@ -138,61 +165,11 @@
 	</div>
 
 
-	<!-- form start -->
-	<form class="m-0" action="{{ route('item.search') }}" method="get">
-		<div class="modal fade" id="modal-search">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h4 class="modal-title">{{ __('البحث عن الأصناف') }}</h4>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
+	@include('items.components.search-modal')
 
-						<div class="form-group">
-							<label for="id" class="control-label small">{{ __('باركود الصنف') }}</label>
-							<input type="number" name="barcode" class="form-control text-center" id="barcode" placeholder="00">
-						</div>
+	@include('items.components.edit-items-modal')
 
-						<div class="form-group">
-							<label for="id" class="control-label small">{{ __('اسم الصنف') }}</label>
-							<input type="text" name="title" class="form-control" id="title" placeholder="{{ __('أكتب اسم الصنف اذا لم تتذكر الباركود') }}" autocomplete="off">
-						</div>
-
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('القسم') }}</label>
-							<select name="cat_id" class="form-control" id="cat_id">
-              	<option value="" selected>{{ __('اختار القسم') }}...</option>
-              </select>
-						</div>
-
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('الموديل') }}</label>
-							<select name="model" class="form-control" id="model">
-								<option value="" selected>{{ __('اختار الموديل') }}...</option>
-							</select>
-						</div>
-
-						<div class="form-group">
-							<label for="type" class="control-label small">{{ __('وحدة المنتج') }}</label>
-							<select name="unit_id" class="form-control" id="unit_id">
-              	<option value="" selected>{{ __('اختار الوحده') }}...</option>
-              </select>
-						</div>
-		      </div>
-		      <div class="modal-footer justify-content-between">
-		        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('إغلاق') }}</button>
-		        <button type="submit" class="btn btn-info">{{ __('البحث الان') }}</button>
-		      </div>
-		    </div>
-		    <!-- /.modal-content -->
-		  </div>
-		  <!-- /.modal-dialog -->
-		</div>
-		<!-- /.modal -->
-	</form>
+	@include('items.components.delete-items-modal')
 
 @endsection
 
@@ -206,11 +183,11 @@
 
 	<script>
 		(function($){
-			select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
+			select2Ajax('.cat_id', '{{ route('ajax.getCategories') }}');
 
-			select2Ajax('#model', '{{ route('ajax.getModels') }}');
+			select2Ajax('.model', '{{ route('ajax.getModels') }}');
 
-			select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
+			select2Ajax('.unit_id', '{{ route('ajax.getunities') }}');
 
 			JsBarcode(".barcode").init();
 
@@ -224,6 +201,30 @@
 					// loadCSS: "{{ asset('dist/css/print-installments.css') }}",
 					// header: "<h1>Look at all of my kitties!</h1>"
 				});
+			});
+
+			$("#checkAll").click(function(){
+				$('input:checkbox').not(this).prop('checked', this.checked);
+			});
+
+			$(document).on('click', '.apply-action', function(){
+				var select = $('#select-action').val();
+
+				if (select != '') {
+					console.log($('.item:checked').length);
+					if ($('.item:checked').length > 0) {
+						$('#modal-' + select).modal('show');
+
+						$('.selected-items').html('');
+						$('.item:checked').each(function(){
+							$('.selected-items').append('<option value="' + $(this).val() + '" selected >'+ $(this).data('text') + '</option>');
+						});
+					} else {
+						alert('يجب اختيار عنصر واحد علي الاقل');
+					}
+				} else {
+					alert('يجب اختيار اجراء');
+				}
 			});
 
 			// $(window).keydown(function(event){

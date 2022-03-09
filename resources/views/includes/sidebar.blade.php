@@ -33,7 +33,7 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
-          @foreach (config('menuItems') as $key => $item)
+          @foreach (sidbarItems() as $key => $item)
             @include('components.menu-items', ['item' => $item, 'key' => $key])
           @endforeach
         </ul>

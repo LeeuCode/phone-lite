@@ -10,12 +10,20 @@ use App\Models\Item;
 
 class InvoicesController extends Controller
 {
-  public function invoices($type)
+  public function invoices()
   {
-    $invoices = Invoice::where('invoice_type', $type)->paginate(15);
+    $invoices = Invoice::where('invoice_type', 'purchase')->paginate(15);
 
     return view('invoices.all', ['invoices' => $invoices]);
   }
+
+
+  // public function invoice($type)
+  // {
+  //   $invoices = Invoice::where('invoice_type', $type)->paginate(15);
+
+  //   return view('invoices.all', ['invoices' => $invoices]);
+  // }
 
   public function sale()
   {
@@ -122,5 +130,15 @@ class InvoicesController extends Controller
       'movement_type' => $movementType
     ]);
 
+  }
+
+  
+
+  public function edit($id)
+  {
+    $invoice      = Invoice::find($id);
+    $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
+
+	return view('invoices.edit', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);
   }
 }

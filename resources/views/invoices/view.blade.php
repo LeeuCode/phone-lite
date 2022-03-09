@@ -33,7 +33,7 @@
 		@include('components.invoice-discount', ['view' => true])
 	</form>
 
-	@include('invoices.print')
+	@include('invoices.print', ['title' => 'فاتورة مبيعات'])
 
 @endsection
 

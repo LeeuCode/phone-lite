@@ -1,4 +1,4 @@
-@include('components.print-header')
+@include('components.print-header', ['_title' => $title])
 
   <p class="p-1" style="width:55%;float:right" >
     <strong>{{ __('الكاشير') }}:</strong>
@@ -54,4 +54,5 @@
          </tr>
        </tfoot>
    </table>
+
 @include('components.print-footer')

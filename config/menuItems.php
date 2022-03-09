@@ -39,9 +39,19 @@ return [
     ],
   ],
   'receipt' => [
-    'name' => 'فاتورة مشتريات',
+    'name' => 'فواتير المشتريات',
     'icon' => 'fas fa-file-invoice-dollar',
-    'route' => 'invoices.purchase'
+    'route' => 'link',
+    'subitems' => [
+      'all' => [
+        'name' => 'كل فواتير الشراء',
+        'route' => 'maintenances'
+      ],
+      'receipt' => [
+        'name' => 'فاتورة مشتريات جديده',
+        'route' => 'invoices.purchase'
+      ],
+    ]
   ],
   'sale_invoice' => [
     'name' => 'فاتورة بيع',

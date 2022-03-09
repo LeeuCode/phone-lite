@@ -52,7 +52,7 @@
 								<td>
 									{{-- <form action="{{ route('item.status', ['id' => $invoice->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post"> --}}
 										{{-- @csrf --}}
-										<a href="{{ route('item.edit', ['id' => $invoice->id]) }}" class="btn btn-outline-info" >
+										<a href="{{ route('invoices.edit', ['id' => $invoice->id]) }}" class="btn btn-outline-info" >
 											<i class="fa fa-edit" ></i>
 										</a>
 										<a href="{{ route('invoices.view', ['id' => $invoice->id]) }}" class="btn btn-outline-success" >
