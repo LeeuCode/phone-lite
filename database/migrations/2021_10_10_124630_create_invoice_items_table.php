@@ -17,8 +17,8 @@ class CreateInvoiceItemsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('invoice_id');
             $table->integer('item_id');
-            $table->integer('item_title');
-            $table->integer('item_price');
+            $table->integer('purchasing_price');
+            $table->integer('selling_price');
             $table->integer('store_balance')->default(0);
             $table->integer('quantity');
             $table->integer('total');

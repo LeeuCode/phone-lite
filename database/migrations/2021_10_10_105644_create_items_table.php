@@ -27,6 +27,7 @@ class CreateItemsTable extends Migration
             $table->integer('average_price')->default(0);
             $table->integer('store_balance')->default(0);
             $table->string('expiration_date')->nullable();
+            $table->integer('publish')->default(1);
             $table->timestamps();
         });
     }

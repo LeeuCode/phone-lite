@@ -15,7 +15,7 @@
             <form class="create-category" action="{{ route('ajax.createCategory') }}" method="post">
                 @csrf
             <div class="modal-body">
-                    <h3 class="text-center">اجمالي الحساب</h3>
+                    <h3 class="text-center">{{ __('اجمالي الحساب') }}</h3>
                     <h1 class="text-center text-danger">
                         <span class="total" >0</span>ج
                         <input id="all-total" type="hidden" name="total_bill" class="total" value="0">

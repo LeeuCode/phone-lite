@@ -202,7 +202,8 @@ function taxRate() {
 
 function totalTax() {
   var total_discount = Number($('#total_discount').val()),
-      tax_rate = taxRate();
+      tax_rate = taxRate(),
+      discount_amount = $('#discount_amount').val();
 
   return (total_discount - tax_rate);
 }
