@@ -21,7 +21,7 @@
                 <tbody>
                     <?php
                         $invoicesSale = App\Models\Invoice::where('invoice_type','sale')
-                        ->orderby('created_at', 'DESC')->limit(10)->get();
+                        ->orderby('created_at', 'DESC')->limit(5)->get();
                     ?>
 
                     @foreach ($invoicesSale as $invoice)

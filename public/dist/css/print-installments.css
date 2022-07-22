@@ -33,9 +33,9 @@
   border-top: 1px dashed #333;
 }
 
-.ticket table td {
+/* .ticket table td {
   border-top: 1px dashed #333;
-}
+} */
 
 .centered {
  text-align: center;
@@ -47,9 +47,9 @@
  /* max-width: 155px; */
 }
 
-.ticket table td,
+/* .ticket table td, */
 .ticket table th,
-.ticket table tr,
+/* .ticket table tr, */
 .ticket table {
  border-collapse: collapse;
  border-top: 1px dashed #333;

@@ -10,135 +10,158 @@ use App\Models\Item;
 
 class InvoicesController extends Controller
 {
-  public function invoices()
-  {
-    $invoices = Invoice::where('invoice_type', 'purchase')->paginate(15);
+    public function invoices()
+    {
+        $invoices = Invoice::where('invoice_type', 'purchase')->paginate(15);
 
-    return view('invoices.all', ['invoices' => $invoices]);
-  }
-
-
-  // public function invoice($type)
-  // {
-  //   $invoices = Invoice::where('invoice_type', $type)->paginate(15);
-
-  //   return view('invoices.all', ['invoices' => $invoices]);
-  // }
-
-  public function sale()
-  {
-    $lastInvoice = Invoice::latest()->first();
-
-    if (!is_null($lastInvoice)) {
-      $id = $lastInvoice->id+1;
-    } else {
-      $id = 1;
+        return view('invoices.all', ['invoices' => $invoices]);
     }
 
-    return view('invoices.index', ['id' => $id]);
-  }
 
-  public function purchase()
-  {
-    $lastInvoice = Invoice::latest()->first();
+    // public function invoice($type)
+    // {
+    //   $invoices = Invoice::where('invoice_type', $type)->paginate(15);
 
-    if (!is_null($lastInvoice)) {
-      $id = $lastInvoice->id+1;
-    } else {
-      $id = 1;
-    }
+    //   return view('invoices.all', ['invoices' => $invoices]);
+    // }
 
-    return view('invoices.index', ['id' => $id]);
-  }
+    public function sale()
+    {
+        $lastInvoice = Invoice::latest()->first();
 
-  public function bounce()
-  {
-    $lastInvoice = Invoice::latest()->first();
-
-    if (!is_null($lastInvoice)) {
-      $id = $lastInvoice->id+1;
-    } else {
-      $id = 1;
-    }
-
-    return view('invoices.index', ['id' => $id]);
-  }
-
-  public function view($id)
-  {
-    $invoice = Invoice::where('id', $id)->first();
-
-    return view('invoices.view', ['invoice' => $invoice]);
-  }
-
-  public function save(Request $request)
-  {
-    $invoiceData = $request->only('invoice_type','movement_type','total','discount_amount',
-      'discount_percentage','total_discount','tax_rate', 'tax_value', 'total_tax', 'total_bill',
-      'paid', 'residual', 'customer_id'
-    );
-
-    $invoiceData['user_id'] = auth()->id();
-    $invoice = Invoice::create($invoiceData);
-
-    $getItems = $request->only('item')['item'];
-    $items = [];
-    foreach ($getItems['id'] as $key => $value) {
-      if (!is_null($value)) {
-
-        $item = Item::find($value);
-
-        if ($request->invoice_type == 'sale') {
-          $totalBlance = ($item->store_balance-$getItems['qt'][$key]);
+        if (!is_null($lastInvoice)) {
+            $id = $lastInvoice->id + 1;
         } else {
-          $totalBlance = ($item->store_balance+$getItems['qt'][$key]);
+            $id = 1;
         }
 
-        Item::where('id', $value)->update([
-          'store_balance' => $totalBlance
-        ]);
-
-        InvoiceItem::create([
-          'invoice_id' => $invoice->id,
-          'item_id' => $value,
-          'purchasing_price' => $getItems['purchasing_price'][$key],
-          'selling_price' => $getItems['selling_price'][$key],
-          'store_balance' => $getItems['store_balance'][$key],
-          'quantity' => $getItems['qt'][$key],
-          'total' => $getItems['item_total'][$key],
-          'type' => $request->invoice_type,
-          'date' => date('Y-m-d')
-        ]);
-      }
+        return view('invoices.index', ['id' => $id]);
     }
 
-    return response()->json(['id' => ($invoice->id+1)]);
-  }
+    public function purchase()
+    {
+        $lastInvoice = Invoice::latest()->first();
 
-  public function invoiceDuesPay(Request $request)
-  {
-    $invoice = Invoice::find($request->id);
-    $movementType = $invoice->movement_type;
-    $piad = ($invoice->paid + $request->paid);
+        if (!is_null($lastInvoice)) {
+            $id = $lastInvoice->id + 1;
+        } else {
+            $id = 1;
+        }
 
-    if ($invoice->total_bill <= $piad) {
-      $movementType = 'cash';
+        return view('invoices.index', ['id' => $id]);
     }
-    
-    invoice::where('id', $request->id)->update([
-      'paid' => $piad,
-      'movement_type' => $movementType
-    ]);
 
-  }
+    public function bounce()
+    {
+        $lastInvoice = Invoice::latest()->first();
 
-  
+        if (!is_null($lastInvoice)) {
+            $id = $lastInvoice->id + 1;
+        } else {
+            $id = 1;
+        }
 
-  public function edit($id)
-  {
-    $invoice      = Invoice::find($id);
-    $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
+        return view('invoices.index', ['id' => $id]);
+    }
 
-	return view('invoices.edit', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);
-  }
+    public function view($id)
+    {
+        $invoice = Invoice::where('id', $id)->first();
+
+        return view('invoices.view', ['invoice' => $invoice]);
+    }
+
+    public function save(Request $request)
+    {
+        $invoiceData = $request->only(
+            'invoice_type',
+            'movement_type',
+            'total',
+            'discount_amount',
+            'discount_percentage',
+            'total_discount',
+            'tax_rate',
+            'tax_value',
+            'total_tax',
+            'total_bill',
+            'paid',
+            'residual',
+            'customer_id'
+        );
+
+        $invoiceData['user_id'] = auth()->id();
+
+        $invoice = Invoice::create($invoiceData);
+
+        if ($invoiceData['total_bill'] > $invoiceData['paid']) {
+            Invoice::where('id', $invoice->id)->update([
+                'movement_type' => 'dues'
+            ]);
+        } else {
+            Invoice::where('id', $invoice->id)->update([
+                'movement_type' => 'cash'
+            ]);
+        }
+
+        $getItems = $request->only('item')['item'];
+
+        $items = [];
+
+        foreach ($getItems['id'] as $key => $value) {
+            if (!is_null($value)) {
+
+                $item = Item::find($value);
+
+                if ($request->invoice_type == 'sale') {
+                    $totalBlance = ($item->store_balance - $getItems['qt'][$key]);
+                } else {
+                    $totalBlance = ($item->store_balance + $getItems['qt'][$key]);
+                }
+
+                Item::where('id', $value)->update([
+                    'store_balance' => $totalBlance
+                ]);
+
+                InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'item_id' => $value,
+                    'purchasing_price' => $getItems['purchasing_price'][$key],
+                    'selling_price' => $getItems['selling_price'][$key],
+                    'store_balance' => $getItems['store_balance'][$key],
+                    'quantity' => $getItems['qt'][$key],
+                    'total' => $getItems['item_total'][$key],
+                    'type' => $request->invoice_type,
+                    'date' => date('Y-m-d')
+                ]);
+            }
+        }
+
+        return response()->json(['id' => ($invoice->id + 1)]);
+    }
+
+    public function invoiceDuesPay(Request $request)
+    {
+        $invoice = Invoice::find($request->id);
+        $movementType = $invoice->movement_type;
+        $piad = ($invoice->paid + $request->paid);
+
+        if ($invoice->total_bill <= $piad) {
+            $movementType = 'cash';
+        }
+
+        invoice::where('id', $request->id)->update([
+            'paid' => $piad,
+            'movement_type' => $movementType
+        ]);
+    }
+
+
+
+    public function edit($id)
+    {
+        $invoice      = Invoice::find($id);
+        $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
+
+        return view('invoices.edit', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);
+    }
 }

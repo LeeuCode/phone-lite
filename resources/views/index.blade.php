@@ -44,20 +44,21 @@
         'bg' => 'bg-gradient-success',
         'icon' => 'fa-file-invoice-dollar',
         'title' => 'فواتير المشتريات',
-        'count' => DB::table('invoices')->where('invoice_type', 'model')->count(),
+        'count' => DB::table('invoices')->where('invoice_type', 'purchase')->count(),
     ])
 
     @include('components.box-widget-statistics', [
         'bg' => 'bg-gradient-warning',
         'icon' => 'fa-file-invoice',
         'title' => 'فواتير المبيعات',
-        'count' => DB::table('invoices')->where('invoice_type', 'sale')->where('movement_type', 'cash')->count(),
+        'count' => DB::table('invoices')->where('invoice_type', 'sale')->count(),
     ])
 
     @include('components.box-widget-statistics', [
         'bg' => 'bg-gradient-danger',
         'icon' => 'fa-file-upload',
         'title' => 'فواتير المرتجع',
+        'count' => DB::table('invoices')->where('invoice_type', 'bounce')->count(),
     ])
 
     @include('components.box-widget-statistics', [
@@ -66,9 +67,8 @@
         'title' => 'الأجزة المستلمه',
     ])
 	
-	@include('components.new-invoices')
+	@include('components.new-invoices-sale')
 	
-	@include('components.new-invoices')
-
+	@include('components.new-invoices-bounce')
 
 @endsection

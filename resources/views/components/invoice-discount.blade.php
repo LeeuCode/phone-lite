@@ -17,7 +17,7 @@
           <label for="discount_amount" class="control-label small">{{ __('خصم مبلغ') }}</label>
           <input type="number" name="discount_amount" class="form-control form-control-sm text-center discount_amount" value="{{ getVal($inv, 'discount_amount') }}" id="discount_amount" placeholder="00" {!! (isset($view)) ? 'readonly' : '' !!}>
         </div>
-        <div class="form-group">
+        <div class="form-group d-none">
           <label for="discount_percentage" class="control-label small">{{ __('خصم بالنسبه') }}</label>
           <input type="number" name="discount_percentage" class="form-control form-control-sm text-center" id="discount_percentage" value="{{ getVal($inv, 'discount_percentage') }}" placeholder="00" {!! (isset($view)) ? 'readonly' : '' !!}>
         </div>

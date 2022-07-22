@@ -29,7 +29,7 @@
 
 @include('invoices.print', ['id' => 'ticket', 'title' => 'فاتورة بيع'])
 
-@include('invoices.components.add-category-modal')
+@include('invoices.components.add-cutomer-modal')
 
 @endsection
 
@@ -194,7 +194,16 @@
 			var paid = $(this).val(),
 				total = $('#all-total').val();
 
-			$('#residual').val(total - paid);
+			if (total > paid) {
+				$('.residual-text').text('{{ __('الباقي') }}');
+			} else {
+				$('.residual-text').text('{{ __('المتبقي') }}');
+			}
+
+			$('.paid').text(paid);
+
+			$('.residual').val(Math.abs(total-paid));
+			$('.residual').text(Math.abs(total-paid));
 		});
 
 		$(document).on('keyup', '#discount_amount', function() {
@@ -221,11 +230,11 @@
 			$('.agentName').text('اسم المورد');
 			select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
 		} else {
-			if (movement_type == 'dues') {
-				$('.dues').show();
-			} else {
-				$('.dues').hide();
-			}
+			// if (movement_type == 'dues') {
+			// 	$('.dues').show();
+			// } else {
+			// 	$('.dues').hide();
+			// }
 
 			$('.purchasing').hide();
 			$('.purchasing_price, .price').attr('readonly', true);
