@@ -56,7 +56,17 @@ return [
   'sale_invoice' => [
     'name' => 'فاتورة بيع',
     'icon' => 'fas fa-file-invoice',
-    'route' => 'invoices.sale'
+    'route' => 'link',
+    'subitems' => [
+      'all' => [
+        'name' => 'كل فواتير المبيعات',
+        'route' => 'maintenances'
+      ],
+      'receipt' => [
+        'name' => 'فاتورة بيع جديده',
+        'route' => 'invoices.sale'
+      ],
+    ]
   ],
   'return_invoice' => [
     'name' => 'فاتورة مرتجع',

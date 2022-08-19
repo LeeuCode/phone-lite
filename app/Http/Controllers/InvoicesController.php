@@ -10,11 +10,25 @@ use App\Models\Item;
 
 class InvoicesController extends Controller
 {
-    public function invoices()
+    public function invoice_purchases()
     {
         $invoices = Invoice::where('invoice_type', 'purchase')->paginate(15);
 
-        return view('invoices.all', ['invoices' => $invoices]);
+        return view('invoices.purchases', ['invoices' => $invoices]);
+    }
+
+    public function invoice_sales()
+    {
+        $invoices = Invoice::where('invoice_type', 'sale')->paginate(15);
+
+        return view('invoices.sales', ['invoices' => $invoices]);
+    }
+
+    public function invoice_bounce()
+    {
+        $invoices = Invoice::where('invoice_type', 'bounce')->paginate(15);
+
+        return view('invoices.slaes', ['invoices' => $invoices]);
     }
 
 
@@ -66,9 +80,10 @@ class InvoicesController extends Controller
 
     public function view($id)
     {
-        $invoice = Invoice::where('id', $id)->first();
+        $invoice      = Invoice::find($id);
+        $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
 
-        return view('invoices.view', ['invoice' => $invoice]);
+        return view('invoices.view', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);
     }
 
     public function save(Request $request)
@@ -155,13 +170,16 @@ class InvoicesController extends Controller
         ]);
     }
 
-
-
     public function edit($id)
     {
         $invoice      = Invoice::find($id);
         $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
 
         return view('invoices.edit', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);
+    }
+
+    public function update(Request $request)
+    {
+        # code...
     }
 }

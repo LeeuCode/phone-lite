@@ -1,10 +1,8 @@
 @php
   $user = auth()->user();
-
-  // dd(getPermission());
 @endphp
 
-{{-- @if (get) --}}
+ @if (getPermission($user->role, $key) || getPermission($user->role, $key.'_create') || $user->id == 1)
   <li class="nav-item">
     <!--  menu-open active-->
     <a href="{{ Route::has($item['route']) ? route($item['route']) : '#' }}" class="nav-link ">
@@ -18,8 +16,8 @@
     </a>
     @if (isset($item['subitems']))
         <ul class="nav nav-treeview">
-          @foreach ($item['subitems'] as $key => $value)
-            @if (getPermission($user->role, $key) || $user->id == 1)
+          @foreach ($item['subitems'] as $_key => $value)
+            @if (getPermission($user->role, $key) || getPermission($user->role, $key.'_'.$_key) || $user->id == 1)
               <li class="nav-item">
                 <!-- active -->
                 <a href="{{ Route::has($value['route']) ? route($value['route']) : '#' }}" class="nav-link ">
@@ -32,4 +30,4 @@
         </ul>
     @endif
   </li>
-{{-- @endif --}}
+@endif

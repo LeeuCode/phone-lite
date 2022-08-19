@@ -26,7 +26,7 @@
 				<table class="table" >
 					<thead>
 						<tr>
-							<th>{{ __('اسم العميل') }}</th>
+							<th>{{ __('اسم المورد') }}</th>
 							<th>{{ __('رقم الهاتف') }}</th>
 							<th>{{ __('العنوان') }}</th>
 							<th>{{ __('الرصيد') }}</th>
@@ -36,7 +36,11 @@
 					<tbody>
 						@foreach ($users as $user)
 							<tr>
-								<td>{{ $user->title }}</td>
+								<td>
+									<a href="{{ route('user.purchases', ['id' => $user->id]) }}">
+										{{ $user->title }}
+									</a>
+								</td>
 								<td>{{ $user->phone }}</td>
 								<td>{{ $user->address }}</td>
 								<td>{{ $user->balance }}</td>

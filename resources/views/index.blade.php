@@ -65,6 +65,7 @@
         'bg' => 'bg-gradient-Teal',
         'icon' => 'fa-tools',
         'title' => 'الأجزة المستلمه',
+        'count' => DB::table('invoices')->where('invoice_type', 'bounce')->count(),
     ])
 	
 	@include('components.new-invoices-sale')

@@ -18,7 +18,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="device_recipient" class="control-label">{{ __('مستلم الجهاز') }}</label>
-							<input type="text" name="device_recipient" class="form-control" id="device_recipient" required placeholder="{{ __('أكتب هنا اسم مستلم الجهاز') }}">
+							<input type="text" name="device_recipient" class="form-control" id="device_recipient" autofocus required placeholder="{{ __('أكتب هنا اسم مستلم الجهاز') }}">
 						</div>
 					</div>
 
@@ -130,7 +130,7 @@
 
 				<div class="col-md-12">
 					<div class="form-group">
-						<label for="type" class="control-label">{{ __('الموديل') }}</label>
+						<label for="type" class="control-label">{{ __('العطل') }}</label>
 						<br>
 						@if (isset($device->malfunction))
 							@php

@@ -89,8 +89,10 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||------ [Invoices Routes] ------||
   =================================*/
-  Route::get('invoices/purchases', 'InvoicesController@invoices')->name('invoices.purchases');
-  // Route::get('invoice/{type}', 'InvoicesController@invoice')->name('invoice');
+  Route::get('invoices/sales', 'InvoicesController@invoice_sales')->name('invoices.sales');
+  Route::get('invoices/purchases', 'InvoicesController@invoice_purchases')->name('invoices.purchases');
+  Route::get('invoices/bounces', 'InvoicesController@invoice_bounce')->name('invoices.bounce');
+
   Route::get('invoice/view/{id}', 'InvoicesController@view')->name('invoices.view');
   Route::get('invoice/edit/{id}', 'InvoicesController@edit')->name('invoices.edit');
   Route::get('invoice/sale', 'InvoicesController@sale')->name('invoices.sale');
@@ -132,6 +134,11 @@ Route::group(['middleware' => ['auth']], function(){
   /*================================
   ||------- [Users Routes] --------||
   =================================*/
+  Route::get('user/purchases/{id}', 'CustomersController@purchases')->name('user.purchases');
+  Route::get('user/sales/{id}', 'CustomersController@sales')->name('user.sales');
+  Route::get('user/bounces/{id}', 'CustomersController@bounces')->name('user.bounces');
+  Route::get('user/damages/{id}', 'CustomersController@damages')->name('user.damages');
+  
   Route::get('users/employees', 'UsersController@index')->name('users.employees');
   Route::get('users/employee/create', 'UsersController@create')->name('users.employee.create');
   Route::get('users/employee/edit/{id}', 'UsersController@edit')->name('users.employee.edit');

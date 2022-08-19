@@ -21,7 +21,7 @@ class CreateMaintenancesTable extends Migration
             $table->integer('Device_type');
             $table->integer('model')->nullable();
             $table->string('imei')->nullable();
-            $table->string('malfunction');
+            $table->string('malfunction')->nullable();
             $table->text('customer_complaint')->nullable();
             $table->text('receipt_notes')->nullable();
             $table->string('delivery_date')->nullable();

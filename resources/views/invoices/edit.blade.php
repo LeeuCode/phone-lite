@@ -58,7 +58,7 @@
 
 	@include('invoices.print', ['id' => 'ticket', 'title' => 'فاتورة مبيعات'])
 
-	@include('invoices.components.add-category-modal')
+	@include('invoices.components.add-customer-modal')
 
 @endsection
 
