@@ -38,11 +38,13 @@ function invoiceType($key = null)
         'bounce_dameg' => __('مرتجع تالف'),
     ];
 
-    if (is_null($key)) {
-        return $values;
-    } else {
-        return $values[$key];
-    }
+    // if (is_null($key)) {
+    //     return $values;
+    // } else {
+    //     return $values[$key];
+    // }
+
+    return (is_null($key)) ? $values : $values[$key];
 }
 
 function getVal($invoice, $selector)

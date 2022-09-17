@@ -12,68 +12,58 @@ class InvoicesController extends Controller
 {
     public function invoice_purchases()
     {
-        $invoices = Invoice::where('invoice_type', 'purchase')->paginate(15);
+        $invoices = Invoice::where('invoice_type', 'purchase')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(15);
 
         return view('invoices.purchases', ['invoices' => $invoices]);
     }
 
     public function invoice_sales()
     {
-        $invoices = Invoice::where('invoice_type', 'sale')->paginate(15);
+        $invoices = Invoice::where('invoice_type', 'sale')
+        ->orderBy('created_at', 'DESC')
+        ->paginate(15);
 
         return view('invoices.sales', ['invoices' => $invoices]);
     }
 
     public function invoice_bounce()
     {
-        $invoices = Invoice::where('invoice_type', 'bounce')->paginate(15);
+        $invoices = Invoice::where('invoice_type', 'bounce')
+        ->orderBy('created_at', 'DESC')
+        ->paginate(15);
 
         return view('invoices.slaes', ['invoices' => $invoices]);
     }
-
-
-    // public function invoice($type)
-    // {
-    //   $invoices = Invoice::where('invoice_type', $type)->paginate(15);
-
-    //   return view('invoices.all', ['invoices' => $invoices]);
-    // }
 
     public function sale()
     {
         $lastInvoice = Invoice::latest()->first();
 
-        if (!is_null($lastInvoice)) {
-            $id = $lastInvoice->id + 1;
-        } else {
-            $id = 1;
-        }
+        (!is_null($lastInvoice)) ? $id = $lastInvoice->id + 1 : $id = 1;
 
         return view('invoices.index', ['id' => $id]);
     }
 
     public function purchase()
     {
+        // Get the last item in Invoices table.
         $lastInvoice = Invoice::latest()->first();
 
-        if (!is_null($lastInvoice)) {
-            $id = $lastInvoice->id + 1;
-        } else {
-            $id = 1;
-        }
+        // Check if has invoices in system or not.
+        (!is_null($lastInvoice)) ?  $id = $lastInvoice->id + 1 : $id = 1;
 
         return view('invoices.index', ['id' => $id]);
     }
 
     public function bounce()
     {
+        // Get the last item in Invoices table.
         $lastInvoice = Invoice::latest()->first();
 
-        if (!is_null($lastInvoice)) {
-            $id = $lastInvoice->id + 1;
-        } else {
-            $id = 1;
-        }
+        // Check if has invoices in system or not.
+        (!is_null($lastInvoice)) ?  $id = $lastInvoice->id + 1 : $id = 1;
 
         return view('invoices.index', ['id' => $id]);
     }
@@ -81,6 +71,7 @@ class InvoicesController extends Controller
     public function view($id)
     {
         $invoice      = Invoice::find($id);
+
         $invoiceItem  = InvoiceItem::where('invoice_id', $id)->get();
 
         return view('invoices.view', ['invoice' => $invoice, 'invoiceItem' => $invoiceItem, 'id' => $id]);

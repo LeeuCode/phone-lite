@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <a href="{{ route('item.create') }}" class="btn btn-info mt-3 mr-3">
+    <a href="{{ route('invoices.sale') }}" class="btn btn-info mt-3 mr-3">
         <i class="fa fa-plus"></i>
         {{ __('انشاء فتورة بيع جديده') }}
     </a>
@@ -36,23 +36,26 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ __('البحث عن الأصناف') }}</h4>
+                        <h4 class="modal-title">{{ __('البحث عن فاتورة') }}</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body row">
 
-                        <div class="form-group">
-                            <label for="id" class="control-label small">{{ __('باركود الصنف') }}</label>
+                        <div class="col-md-3 form-group">
+                            <label for="id" class="control-label small">{{ __('رقم الفاتورة') }}</label>
                             <input type="number" name="barcode" class="form-control text-center" id="barcode"
                                 placeholder="00">
                         </div>
 
-                        <div class="form-group">
-                            <label for="id" class="control-label small">{{ __('اسم الصنف') }}</label>
-                            <input type="text" name="title" class="form-control" id="title"
-                                placeholder="{{ __('أكتب اسم الصنف اذا لم تتذكر الباركود') }}" autocomplete="off">
+                        <div class="col-md-3 form-group">
+                            <label for="id" class="control-label small">{{ __('نوع الحركه') }}</label>
+                            <select name="invoice_type" class="form-control" id="invoice_type">
+                                @foreach (invoiceType() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group">

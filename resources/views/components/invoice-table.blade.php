@@ -18,7 +18,9 @@
             <tr>
                 <td>{{ $invoice->id }}</td>
                 <td>{{ movementType($invoice->movement_type) }}</td>
-                <td>{{ (isset($invoice->customer->name)) ? $invoice->customer->name : __('لا يوجد') }}</td>
+                <td>
+                    {!! (isset($invoice->customer->title)) ? '<a href="'.route('user.purchases', ['id' => $invoice->customer->id]).'">'.$invoice->customer->title.'</a>' : __('لا يوجد') !!}
+                </td>
                 <td>{{ $invoice->total }}</td>
                 <td>{{ $invoice->discount_amount }}</td>
                 <td>{{ $invoice->total_discount }}</td>
