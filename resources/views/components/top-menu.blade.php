@@ -11,3 +11,10 @@
     {{ __('تحصيل فاتوره اجل') }}
   </a>
 </li>
+
+<li class="nav-item d-none d-sm-inline-block">
+  <a href="{{ route('invoices.sale') }}" class="nav-link">
+    <i class="nav-icon fas fa-file-invoice"></i>
+    {{ __('فاتورة جديدة') }}
+  </a>
+</li>

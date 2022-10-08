@@ -83,25 +83,46 @@ if (isset($invoice)) {
                 </div>
             </div>
 
-            <div class="col-md-3 dues" >
+            <div class="col-md-2 dues">
                 <div class="form-group row m-0">
-                    <div class="col-md-10 p-0">
+                    <div class="col-md-11 p-0">
                         <label for="agentName" class="control-label small agentName">
-                            {{ request()->routeIs('invoices.purchase') ?  __('اسم المورد') :  __('اسم العميل') }}
+                            {{ request()->routeIs('invoices.purchase') ? __('اسم المورد') : __('اسم العميل') }}
                             {{-- __('اسم المورد') --}}
                         </label>
+
+                        @php
+                            $selectOption = '';
+                            
+                            if (is_object($inv)) {
+                                $agentType = $inv->invoice_type == 'sale' ? 'customer_id' : 'supplier_id';
+                            
+                                if (isset($inv->customer_id)) {
+                                    $selectOption = '<option value="' . $inv->customer_id . '" selected>' . $inv->customer->title . '</option>';
+                                }
+                            } else {
+                                $agentType = request()->routeIs('invoices.purchase') ? 'supplier_id' : 'customer_id';
+                            }
+                        @endphp
+
                         <select name="customer_id" class="form-control form-control-sm wh-100 user-type"
-                            id="supplier_id" placeholder="{{ __('اختار من هنا.....') }}">
+                            id="{{ $agentType }}" placeholder="{{ __('اختار من هنا.....') }}">
+                            {!! $selectOption !!}
                         </select>
                     </div>
-                    <div class="col-md-2 p-0">
-                        <label for="agentName" class="control-label small">.</label>
+                    <div class="col-md-1 p-0">
+                        <label for="agentName" class="control-label small text-white">.</label>
                         <button type="button" class="btn bg-light input-group-prepend" data-toggle="modal"
                             data-target="#add-cutomer">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-2">
+                <label for="movement_type" class="control-label small">{{ __('تاريخ الفاتورة') }}</label>
+                <input class="form-control form-control-sm text-center p-0" id="id"
+                        value="{{ isset($inv->created_at) ? date('d-m-Y', strtotime($inv->created_at)) : date('d-m-Y') }}" disabled>
             </div>
         </div>
         <!-- /.card-body -->
@@ -116,25 +137,26 @@ if (isset($invoice)) {
         (function($) {
             select2Ajax('#item-name', '{{ route('ajax.getItems') }}');
 
-            select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
+            // select2Ajax('#customer_id', '{{ route('ajax.getCustomers') }}');
 
-            select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
+            // select2Ajax('#supplier_id', '{{ route('ajax.getSuppliers') }}');
 
             $(document).on('change', '#invoice_type', function() {
+                $("#supplier_id, #customer_id").empty();
                 invoiceType();
             });
 
-            $(document).on('change', '#movement_type', function() {
-                var type = $(this).val();
+            // $(document).on('change', '#movement_type', function() {
+            //     var type = $(this).val();
 
-                $("#supplier_id, #customer_id").empty();
+            //     $("#supplier_id, #customer_id").empty();
 
-                if (type == 'dues') {
-                    $('.dues').show();
-                } else {
-                    $('.dues').hide();
-                }
-            })
+            //     if (type == 'dues') {
+            //         $('.dues').show();
+            //     } else {
+            //         $('.dues').hide();
+            //     }
+            // })
 
             $('#item-name').on('select2:select', function(e) {
                 var data = e.params.data;

@@ -28,7 +28,7 @@
         @include('invoices.components.calculation')
     </form>
 
-    @include('invoices.print', ['id' => 'ticket', 'title' => 'فاتورة بيع'])
+    @include('invoices.print', ['continar_ID' => 'ticket', 'title' => 'فاتورة بيع'])
 
     @include('invoices.components.add-customer-modal')
 @endsection
@@ -52,7 +52,7 @@
                 tr.remove();
                 $('#in' + barcode).remove();
 
-                console.log(barcode);
+                // console.log(barcode);
             });
 
             $(document).on('keydown', '.barcode', function(e) {
@@ -64,6 +64,12 @@
 
             $(document).on('keyup', '.discount_amount', function() {
                 discountTotal();
+            });
+
+            $(document).on('select2:select', '.user-type', function() {
+                // $('.agent-print-name').removeClass('hidden-print');
+                // console.log($('.user-type option:selected').text());
+                $('.agentSelected').text($('.user-type option:selected').text());
             });
 
             $(document).on('keyup', '.qt', function() {
@@ -79,36 +85,40 @@
                     invoiceType = $('#invoice_type').val(),
                     balance = trRow.find('.store_balance').data('balance');
 
-                if (invoiceType == 'purchase') {
-                    trRow.find('.item-total').val(totalPurchasing);
-                    trInvoice.find('.prnt-item-total').text(totalPurchasing);
-                } else {
-                    if (qt > balance) {
-                        Swal.fire({
-                            title: 'تنبيه!',
-                            text: "الكمية التي ادخلتها اكبر من الموجوده بالمخزن!",
-                            icon: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            // cancelButtonColor: '#d33',
-                            confirmButtonText: 'حسناً'
-                        });
 
-                        trRow.find('.store_balance').val(balance - 1);
-                        qt = $(this).val(1);
-                        total = (1 * itemPrice);
+                if (invoiceType != 'bounce_dameg') {
+                    // console.log('run');
+                    if (invoiceType == 'purchase') {
+                        trRow.find('.item-total').val(totalPurchasing);
+                        trInvoice.find('.prnt-item-total').text(totalPurchasing);
+                    } else {
+                        if (qt > balance) {
+                            Swal.fire({
+                                title: 'تنبيه!',
+                                text: "الكمية التي ادخلتها اكبر من الموجوده بالمخزن!",
+                                icon: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                // cancelButtonColor: '#d33',
+                                confirmButtonText: 'حسناً'
+                            });
+
+                            trRow.find('.store_balance').val(balance - 1);
+                            qt = $(this).val(1);
+                            total = (1 * itemPrice);
+
+                            trRow.find('.item-total').val(total);
+                            trInvoice.find('.prnt-item-total').text(total);
+                            itemTotalPrice();
+                            storeBalance(trRow);
+                            discountTotal();
+
+                            return false;
+                        }
 
                         trRow.find('.item-total').val(total);
                         trInvoice.find('.prnt-item-total').text(total);
-                        itemTotalPrice();
-                        storeBalance(trRow);
-                        discountTotal();
-
-                        return false;
                     }
-
-                    trRow.find('.item-total').val(total);
-                    trInvoice.find('.prnt-item-total').text(total);
                 }
 
                 itemTotalPrice();
@@ -142,6 +152,7 @@
                     paid = $('#paid').val();
 
                 $('#paid').focus();
+
                 if (total != 0) {
                     if (paid != '') {
                         $.ajax({
@@ -149,28 +160,47 @@
                             url: url,
                             data: data,
                             beforeSend: function() {
+
+                            },
+                            success: function(data) {
+                                // $('#id').val(data.id);
+                                // $('#invoice-id').text(data.id);
+                                $('#invoice-id').text(data.print_id);
+                                $('.table-print').html(data.items);
+                                $('#total-of-print').text(data.total_bill);
+                                $('#paid-of-print').text(data.paid);
+                                $("#supplier_id, #customer_id").empty();
+
+                                console.log(data.selectedAgent);
+                                
+                                if (data.selectedAgent != null) {
+                                    $('.agent-print-name').removeClass('hidden-print');
+                                    $('#agent-print').text(data.agentName);
+                                    $('.agentSelected').text(data.selectedAgent);
+                                } else {
+                                    $('.agent-print-name').addClass('hidden-print');
+                                }
+
                                 $("#ticket").printThis({
                                     debug: false,
                                     importCSS: false,
                                     loadCSS: "{{ asset('dist/css/print-installments.css') }}",
                                 });
                             },
-                            success: function(data) {
-                                $('.apend-item-prent').remove();
-                                $('#id').val(data.id);
-                                resetForm();
-                            },
                             error: function(xhr) { // if error occured
                                 alert("Error occured.please try again");
                                 $(placeholder).append(xhr.statusText + xhr.responseText);
                                 $(placeholder).removeClass('loading');
                             }
+                        }).done(function(data) {
+                            $('#id').val(data.id);
+                            // $('.agent-print-name').addClass('hidden-print');
+                            resetForm();
                         });
                     } else {
                         $('#calculation').modal('show');
                     }
                 } else {
-                    // alert('يجب ان تختار عنصر واحد علي الاقل')
                     Swal.fire({
                         title: 'تنبيه!',
                         text: "يجب ان تختار عنصر واحد علي الاقل",
@@ -218,12 +248,12 @@
             var type = $('#invoice_type').val(),
                 movement_type = $('#movement_type').val();
 
-            $("#supplier_id, #customer_id").empty();
+            // $("#supplier_id, #customer_id").empty();
 
             if (type == 'purchase') {
                 $('.purchasing, .dues').show();
-                $('.purchasing_price, .price').attr('readonly', false);
-                $('.purchasing_price, .price').removeClass('border-0');
+                $('.purchasing_price, .prices').attr('readonly', false);
+                $('.purchasing_price, .prices').removeClass('border-0');
 
                 $('input[name=type]').val('suppliers');
                 $('.user-type').attr('id', 'supplier_id');
@@ -239,8 +269,8 @@
                 // }
 
                 $('.purchasing').hide();
-                $('.purchasing_price, .price').attr('readonly', true);
-                $('.purchasing_price, .price').addClass('border-0');
+                $('.purchasing_price, .prices').attr('readonly', true);
+                $('.purchasing_price, .prices').addClass('border-0');
 
                 $('input[name=type]').val('customer');
                 $('.user-type').attr('id', 'customer_id');

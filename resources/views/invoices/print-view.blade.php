@@ -21,14 +21,14 @@
 </p>
 
 <table class="m-2">
-    <thead>
+    {{-- <thead> --}}
         <tr>
             <th class="description centered">{{ __('الصنف') }}</th>
             <th class="price centered">{{ __('السعر') }}</th>
             <th class="quantity centered">{{ __('الكمية') }}</th>
             <th class="inv-total-item centered">{{ __('الاجمالي') }}</th>
         </tr>
-    </thead>
+    {{-- </thead> --}}
     <tbody class="table-print">
         <tr class="hidden-print clone-invoice">
             <td class="description centered p-1"></td>

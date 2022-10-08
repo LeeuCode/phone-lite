@@ -6,105 +6,162 @@ use Illuminate\Http\Request;
 use App\Models\InvoiceItem;
 use App\Models\Installment;
 use App\Models\Item;
+use App\Models\Invoice;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
     public function itemsInventory(Request $request)
     {
-      $items = Item::where('publish', 1);
+        $items = Item::where('publish', 1);
 
-      if(isset($request->cat_id)) {
-        $items->where('cat_id', $request->cat_id);
-      }
+        if (isset($request->cat_id)) {
+            $items->where('cat_id', $request->cat_id);
+        }
 
-      if(isset($request->model)) {
-        $items->where('model', $request->model);
-      }
+        if (isset($request->model)) {
+            $items->where('model', $request->model);
+        }
 
-      if(isset($request->unit_id)) {
-        $items->where('unit_id', $request->unit_id);
-      }
+        if (isset($request->unit_id)) {
+            $items->where('unit_id', $request->unit_id);
+        }
 
-      $allItems = [];
+        $allItems = [];
 
-      if (isset($request->result)) {
-        $allItems = $items->orderby('store_balance', 'DESC')->paginate(15);
-      }
-      return view('reports.items-inventory', ['items' => $allItems]);
+        if (isset($request->result)) {
+            $allItems = $items->orderby('store_balance', 'DESC')->paginate(15);
+        }
+
+        return view('reports.items-inventory', ['items' => $allItems]);
     }
 
     public function saleInvoice(Request $request)
     {
+        $start = date("Y-m-d", strtotime($request->from));
+        $end = date("Y-m-d", strtotime($request->to));
 
-      $start= date("Y-m-d",strtotime($request->from));
-      $end= date("Y-m-d",strtotime($request->to));
+        $items = InvoiceItem::select(
+            'invoice_items.item_id',
+            \DB::raw('sum(store_balance) as balances'),
+            \DB::raw('sum(quantity) as quantities'),
+            \DB::raw('sum(total) as totals')
+        )
+            ->where('type', 'sale')
+            ->whereBetween('date', [$start, $end])
+            ->groupby('item_id');
 
-      $items = InvoiceItem::select(
-        'invoice_items.item_id',
-        \DB::raw('sum(store_balance) as balances'),
-        \DB::raw('sum(quantity) as quantities'),
-        \DB::raw('sum(total) as totals')
-      )
-      ->where('type', 'sale')
-      ->whereBetween('date', [$start, $end])
-      ->groupby('item_id');
+        $allItems = [];
 
-      $allItems = [];
+        if (isset($request->result)) {
+            $allItems = $items->paginate(50);
+        }
 
-      if (isset($request->result)) {
-        $allItems = $items->paginate(50);
-      }
-
-      return view('reports.sales', ['items' => $allItems]);
+        return view('reports.sales', ['items' => $allItems]);
     }
 
     public function daily(Request $request)
     {
-      $start= date("Y-m-d",strtotime($request->from));
+        $start = date("Y-m-d", strtotime($request->from));
 
-      $itemCash = InvoiceItem::join('invoices', function ($join) {
-        $join->on('invoices.id', '=', 'invoice_items.invoice_id');
-      })
-      ->select(
-        'invoice_items.item_id',
-        \DB::raw('sum(invoice_items.store_balance) as balances'),
-        \DB::raw('sum(invoice_items.quantity) as quantities'),
-        \DB::raw('sum(invoice_items.total) as totals')
-      )
-      ->where('invoice_items.type', 'sale')
-      ->where('invoices.movement_type', 'cash')
-      ->where('date',$start)
-      ->groupby('item_id');
+        $invoiceSale = Invoice::where('invoice_type', 'sale')
+        // ->where('movement_type', 'cash')
+        ->whereDate('created_at', $start)
+        ->select(
+            'movement_type',
+            
+            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
+            \DB::raw('sum(invoices.total_bill) as total_bills'),
+            \DB::raw('sum(invoices.paid) as paids'),
+            \DB::raw('sum(invoices.residual) as residuals'),
+        )
+        ->groupBy('movement_type')
+        ->get();
 
-      $itemDues = InvoiceItem::join('invoices', function ($join) {
-        $join->on('invoices.id', '=', 'invoice_items.invoice_id');
-      })
-      ->select(
-        'invoice_items.item_id',
-        \DB::raw('sum(invoice_items.store_balance) as balances'),
-        \DB::raw('sum(invoice_items.quantity) as quantities'),
-        \DB::raw('sum(invoice_items.total) as totals')
-      )
-      ->where('invoice_items.type', 'sale')
-      ->where('invoices.movement_type', 'dues')
-      ->where('date',$start)
-      ->groupby('item_id');
+        $invoicePurchase = Invoice::where('invoice_type', 'purchase')
+        ->whereDate('created_at', $start)
+        ->select(
+            'movement_type',
+            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
+            \DB::raw('sum(invoices.total_bill) as total_bills'),
+            \DB::raw('sum(invoices.paid) as paids'),
+            \DB::raw('sum(invoices.residual) as residuals'),
+        )
+        ->groupBy('movement_type')
+        ->get();
 
-      $itemsCash = [];
-      $itemsDues = [];
-      $installments = [];
+        $invoiceBounce = Invoice::where('invoice_type', 'bounce')
+        ->whereDate('created_at', $start)
+        ->select(
+            'movement_type',
+            
+            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
+            \DB::raw('sum(invoices.total_bill) as total_bills'),
+            \DB::raw('sum(invoices.paid) as paids'),
+            \DB::raw('sum(invoices.residual) as residuals'),
+        )
+        ->groupBy('movement_type')
+        ->get();
 
-      if (isset($request->result)) {
-        $itemsCash = $itemCash->get();
-        $itemsDues = $itemDues->get();
-        $installments = Installment::where('date',$start)->get();
-      }
+        $invoiceBounceDameg = Invoice::where('invoice_type', 'bounce_dameg')
+        ->whereDate('created_at', $start)
+        ->select(
+            'movement_type',
+            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
+            \DB::raw('sum(invoices.total_bill) as total_bills'),
+            \DB::raw('sum(invoices.paid) as paids'),
+            \DB::raw('sum(invoices.residual) as residuals'),
+        )
+        ->groupBy('movement_type')
+        ->get();
 
-      return view('reports.daily', [
-        'itemsCash' => $itemsCash,
-        'itemsDues' => $itemsDues,
-        'installments' => $installments
-      ]);
+        // dd($invoicePurchase);
+
+        $itemCash = InvoiceItem::join('invoices', function ($join) {
+            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
+        })
+            ->select(
+                'invoice_items.item_id',
+                \DB::raw('sum(invoice_items.store_balance) as balances'),
+                \DB::raw('sum(invoice_items.quantity) as quantities'),
+                \DB::raw('sum(invoice_items.total) as totals')
+            )
+            ->where('invoice_items.type', 'sale')
+            ->where('invoices.movement_type', 'cash')
+            ->where('date', $start)
+            ->groupby('item_id');
+
+        $itemDues = InvoiceItem::join('invoices', function ($join) {
+            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
+        })->select(
+            'invoice_items.item_id',
+            \DB::raw('sum(invoice_items.store_balance) as balances'),
+            \DB::raw('sum(invoice_items.quantity) as quantities'),
+            \DB::raw('sum(invoice_items.total) as totals')
+        )->where('invoice_items.type', 'sale')
+            ->where('invoices.movement_type', 'dues')
+            ->where('date', $start)
+            ->groupby('item_id');
+
+        $itemsCash = [];
+        $itemsDues = [];
+        $installments = [];
+
+        if (isset($request->result)) {
+            $itemsCash = $itemCash->get();
+            $itemsDues = $itemDues->get();
+            $installments = Installment::where('date', $start)->get();
+        }
+
+        return view('reports.daily', [
+            'date' => $start,
+            'itemsCash' => $itemsCash,
+            'itemsDues' => $itemsDues,
+            'installments' => $installments,
+            'invoiceSale' => $invoiceSale,
+            'invoicePurchase' => $invoicePurchase,
+            'invoiceBounce' => $invoiceBounce,
+            'invoiceBounceDameg' => $invoiceBounceDameg
+        ]);
     }
 }

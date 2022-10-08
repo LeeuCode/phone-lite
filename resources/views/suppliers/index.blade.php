@@ -37,7 +37,7 @@
 						@foreach ($users as $user)
 							<tr>
 								<td>
-									<a href="{{ route('users.profile', ['id' => $user->id]) }}">
+									<a href="{{ route('user.purchases', ['id' => $user->id]) }}">
 										{{ $user->title }}
 									</a>
 								</td>

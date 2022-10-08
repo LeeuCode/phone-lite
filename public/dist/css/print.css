@@ -1,9 +1,41 @@
+@import "../../plugins/fontawesome-free/css/all.min.css";
+
 * {
-   direction: rtl;
+    direction: rtl;
 }
+
+table {
+    page-break-inside: auto !important;
+}
+
+tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+}
+
+thead {
+    display: table-header-group !important;
+}
+
+tfoot {
+    display: table-footer-group !important;
+}
+
+table {
+    overflow: hidden !important;
+    height: auto !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    page-break-inside: avoid !important;
+}
+
+table:last-child {
+    page-break-after: auto !important;
+}
+
 .ticket {
- font-size: 10px;
- font-family: 'Times New Roman';
+    font-size: 10px;
+    font-family: 'Times New Roman';
 
 }
 
@@ -11,58 +43,59 @@
 .ticket table th,
 .ticket table tr,
 .ticket table {
- border-collapse: collapse;
- border-top: 0.2px solid #dee2e6;
+    border-collapse: collapse;
+    border-top: 0.2px solid #dee2e6;
 }
 
 .ticket table th {
-  border-top: 0.5px solid gray;
-  border-bottom: 0.5px solid gray;
+    border-top: 0.5px solid gray;
+    border-bottom: 0.5px solid gray;
 }
 
 .ticket table {
-  width: 100%;
+    width: 100%;
 }
 
 .ticket td.description,
 .ticket th.description {
- width: 75px;
- max-width: 75px;
- font-size: 10px;
+    width: 75px;
+    max-width: 75px;
+    font-size: 10px;
 }
 
 .ticket td.quantity,
 .ticket th.quantity {
- width: 40px;
- max-width: 40px;
- word-break: break-all;
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
 }
 
 .ticket td.price,
 .ticket th.price {
- width: 40px;
- max-width: 40px;
- word-break: break-all;
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
 }
 
 .centered {
- text-align: center;
- align-content: center;
+    text-align: center;
+    align-content: center;
 }
 
 .ticket {
- width: 100%;
- /* max-width: 155px; */
+    width: 100%;
+    /* max-width: 155px; */
 }
 
 .ticket img {
- max-width: inherit;
- width: inherit;
+    max-width: inherit;
+    width: inherit;
 }
 
 @media print {
- .hidden-print,
- .hidden-print * {
-     display: none !important;
- }
+
+    .hidden-print,
+    .hidden-print * {
+        display: none !important;
+    }
 }

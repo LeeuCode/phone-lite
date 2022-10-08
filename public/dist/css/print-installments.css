@@ -1,31 +1,64 @@
+@import "../../plugins/fontawesome-free/css/all.min.css";
+
 * {
-   direction: rtl;
-   margin:0;
-   padding:0;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
 }
+
+table {
+  page-break-inside: auto !important;
+}
+
+tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+
+thead {
+  display: table-header-group !important;
+}
+
+tfoot {
+  display: table-footer-group !important;
+}
+
+table {
+  overflow: hidden !important;
+  height: auto !important;
+  page-break-after: avoid !important;
+  page-break-before: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+table:last-child {
+  page-break-after: auto !important;
+}
+
 .ticket {
- font-size: 10px;
- font-family: 'Times New Roman';
- width: 100%;
+  font-size: 10px;
+  font-family: 'Times New Roman';
+  width: 100%;
 }
 
 .ticket img {
- max-width: inherit;
- width: inherit;
+  max-width: inherit;
+  width: inherit;
 }
 
 @media print {
- .hidden-print,
- .hidden-print * {
-     display: none !important;
- }
+
+  .hidden-print,
+  .hidden-print * {
+    display: none !important;
+  }
 }
 
 .ticket table {
   width: 100%;
 }
 
-.ticket table th:first-child{
+.ticket table th:first-child {
   background-color: #333;
   text-align: right;
   width: 30%;
@@ -38,21 +71,21 @@
 } */
 
 .centered {
- text-align: center;
- align-content: center;
+  text-align: center;
+  align-content: center;
 }
 
 .ticket {
- width: 100%;
- /* max-width: 155px; */
+  width: 100%;
+  /* max-width: 155px; */
 }
 
 /* .ticket table td, */
 .ticket table th,
 /* .ticket table tr, */
 .ticket table {
- border-collapse: collapse;
- border-top: 1px dashed #333;
+  border-collapse: collapse;
+  border-top: 1px dashed #333;
 }
 
 /* .ticket table th:first-child {
@@ -66,53 +99,61 @@
 
 .ticket td.description,
 .ticket th.description {
- width: 75px;
- max-width: 75px;
- font-size: 10px;
+  width: 75px;
+  max-width: 75px;
+  font-size: 10px;
 }
 
 .ticket td.quantity,
 .ticket th.quantity {
- width: 40px;
- max-width: 40px;
- word-break: break-all;
+  width: 40px;
+  max-width: 40px;
+  word-break: break-all;
 }
 
 .ticket td.price,
 .ticket th.price {
- width: 40px;
- max-width: 40px;
- word-break: break-all;
+  width: 40px;
+  max-width: 40px;
+  word-break: break-all;
 }
 
-.m-1{
+.m-1 {
   margin: .25rem;
 }
-.m-2{
+
+.m-2 {
   margin: .5rem;
 }
-.m-3{
+
+.m-3 {
   margin: 1rem;
 }
-.m-4{
+
+.m-4 {
   margin: 1.5rem;
 }
-.m-5{
+
+.m-5 {
   margin: 3rem;
 }
 
-.p-1{
+.p-1 {
   margin: .25rem;
 }
-.p-2{
+
+.p-2 {
   padding: .5rem;
 }
-.p-3{
+
+.p-3 {
   padding: 1rem;
 }
-.p-4{
+
+.p-4 {
   padding: 1.5rem;
 }
-.p-5{
+
+.p-5 {
   padding: 3rem;
 }

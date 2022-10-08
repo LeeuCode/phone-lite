@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['auth']], function(){
+Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/', function () {
     return view('index'); //view('welcome');
@@ -21,6 +21,7 @@ Route::group(['middleware' => ['auth']], function(){
   ||-------- [Items Routes] -------||
   =================================*/
   Route::get('items', 'ItemsController@index')->name('items');
+  Route::get('items/out-of-stock', 'ItemsController@outOfStock')->name('items.out-of-stock');
   Route::get('item/create', 'ItemsController@create')->name('item.create');
   Route::get('item/edit/{id}', 'ItemsController@edit')->name('item.edit');
   Route::get('item/search', 'ItemsController@search')->name('item.search');
@@ -80,7 +81,8 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('ajax/installment/user', 'AjaxController@getInstallmentByCustomer')->name('ajax.installment.user');
   Route::get('ajax/installment/months', 'AjaxController@getMonthsByInstallment')->name('ajax.months.installment');
   Route::get('ajax/invoice/remaining/amount', 'AjaxController@getInvoiceRemainingAmount')
-  ->name('ajax.invoice.remaining.amount');
+    ->name('ajax.invoice.remaining.amount');
+  Route::get('ajax/invoice/dues', 'AjaxController@getInvoicesDues')->name('ajax.invoice.dues');
 
   Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
   Route::post('ajax/createUser', 'AjaxController@createUser')->name('ajax.createUser');
@@ -91,7 +93,7 @@ Route::group(['middleware' => ['auth']], function(){
   =================================*/
   Route::get('invoices/sales', 'InvoicesController@invoice_sales')->name('invoices.sales');
   Route::get('invoices/purchases', 'InvoicesController@invoice_purchases')->name('invoices.purchases');
-  Route::get('invoices/bounces', 'InvoicesController@invoice_bounce')->name('invoices.bounce');
+  Route::get('invoices/bounces', 'InvoicesController@invoice_bounce')->name('invoices.bounces');
 
   Route::get('invoice/view/{id}', 'InvoicesController@view')->name('invoices.view');
   Route::get('invoice/edit/{id}', 'InvoicesController@edit')->name('invoices.edit');
@@ -100,6 +102,7 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('invoice/bounce', 'InvoicesController@sale')->name('invoices.bounce');
 
   Route::post('invoice/save', 'InvoicesController@save')->name('invoice.save');
+  Route::post('invoice/update/{id}', 'InvoicesController@update')->name('invoice.update');
   Route::post('invoice/dues/pay', 'InvoicesController@invoiceDuesPay')->name('invoice.dues.pay');
 
   /*================================
@@ -109,6 +112,7 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('user/create', 'CustomersController@create')->name('user.create');
   Route::get('user/edit/{id}', 'CustomersController@edit')->name('user.edit');
   Route::get('users/suppliers', 'CustomersController@suppliers')->name('users.suppliers');
+  Route::get('users/supplier/{id}', 'CustomersController@supplier')->name('users.supplier');
   Route::get('user/supplier/create', 'CustomersController@supplierCreate')->name('user.suppliers.create');
   Route::get('user/supplier/edit/{id}', 'CustomersController@supplierEdit')->name('user.supplier.edit');
 
@@ -138,7 +142,7 @@ Route::group(['middleware' => ['auth']], function(){
   Route::get('user/sales/{id}', 'CustomersController@sales')->name('user.sales');
   Route::get('user/bounces/{id}', 'CustomersController@bounces')->name('user.bounces');
   Route::get('user/damages/{id}', 'CustomersController@damages')->name('user.damages');
-  
+
   Route::get('users/employees', 'UsersController@index')->name('users.employees');
   Route::get('users/employee/create', 'UsersController@create')->name('users.employee.create');
   Route::get('users/employee/edit/{id}', 'UsersController@edit')->name('users.employee.edit');

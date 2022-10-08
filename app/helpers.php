@@ -190,16 +190,16 @@ function permissions()
 
 function addOption($key, $value)
 {
-    if (!empty($value)) {
+    // if (!empty($value)) {
         $val = '';
 
         if (is_array($value)) {
             $val = json_encode($value);
         } else {
-            $val = $value;
+            $val = (is_null($value)) ? '' : $value;
         }
 
-        $lang = app()->getLocale();
+        // $lang = app()->getLocale();
 
         $optionFound =  \DB::table('options')->where('key', $key)->count();
 
@@ -210,10 +210,10 @@ function addOption($key, $value)
             \DB::table('options')->insertGetId([
                 'key'       => $key,
                 'value'     => $val,
-                'lang'      => $lang
+                // 'lang'      => $lang
             ]);
         }
-    }
+    // }
     return false;
 }
 
@@ -339,11 +339,11 @@ function sidbarItems()
             'route' => '',
             'subitems' => [
                 'return_invoice' => [
-                    'name' => 'كل فواتير البيع',
-                    'route' => 'invoices.sales'
+                    'name' => 'كل فواتير المرتجع',
+                    'route' => 'invoices.bounces'
                 ],
                 'create' => [
-                    'name' => 'فاتورة البيع جديده',
+                    'name' => 'فاتورة مرتجع جديده',
                     'route' => 'invoices.bounce'
                 ],
             ]

@@ -125,29 +125,13 @@
 										<a href="{{ route('item.edit', ['id' => $item->id]) }}" class="btn btn-outline-info" >
 											<i class="fa fa-edit" ></i>
 										</a>
-										<a href="#" data-id="{{ $item->id }}" class="print-barcode btn btn-outline-warning" >
+										{{-- <a href="#" data-id="{{ $item->id }}" class="print-barcode btn btn-outline-warning" >
 											<i class="fa fa-barcode" ></i>
-										</a>
+										</a> --}}
 										<button type="submit" class="btn btn-outline-danger" >
 											<i class="fa fa-eye-slash" ></i>
 										</button>
 									</form>
-
-									<div id="div-barcode-{{ $item->id }}" class="d-none"  style="width:100%">
-										<p style="width:100%;text-align:center;margin:0;font-size:10px">{{ $item->title }}</p>
-										{{-- <svg class="barcode" style="width:100%;text-align:center;"
-											jsbarcode-format="CODE128"
-											jsbarcode-value="123456789012"
-											jsbarcode-textmargin="0"
-											jsbarcode-fontoptions="bold"
-											>
-										</svg> --}}
-										<img class="barcode" style="width:100%"
-										jsbarcode-format="CODE128"
-										jsbarcode-value="123456789012"
-										jsbarcode-textmargin="0"
-										jsbarcode-fontoptions="bold" />
-									</div>
 								</td>
 							</tr>
 						@endforeach

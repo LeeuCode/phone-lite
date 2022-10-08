@@ -10,58 +10,58 @@ class PermissionController extends Controller
 {
     public function index()
     {
-      $permissions = groupPermission::paginate(15);
-      return view('permissions.index', ['permissions'=> $permissions]);
+        $permissions = groupPermission::paginate(15);
+        return view('permissions.index', ['permissions' => $permissions]);
     }
 
     public function create()
     {
-      return view('permissions.create');
+        return view('permissions.create');
     }
 
     public function edit($id)
     {
-      $groupPermission = groupPermission::find($id);
-      return view('permissions.edit', ['groupPermission' => $groupPermission]);
+        $groupPermission = groupPermission::find($id);
+        return view('permissions.edit', ['groupPermission' => $groupPermission]);
     }
 
     public function store(Request $request)
     {
-      $permissions = $request->except(['_token', 'title']);
+        $permissions = $request->except(['_token', 'title']);
 
-      $groupPermissionID = groupPermission::create([
-        'title' => $request->title
-      ]);
-
-      foreach ($permissions as $key => $value) {
-        Permission::create([
-          'group_permission_id' => $groupPermissionID->id,
-          'key' => $key,
-          'value' => $value,
+        $groupPermissionID = groupPermission::create([
+            'title' => $request->title
         ]);
-      }
 
-      return redirect()->back()->with('success', __('تم أضافة جروب الصلاحيه بنجاح!'));
+        foreach ($permissions as $key => $value) {
+            Permission::create([
+                'group_permission_id' => $groupPermissionID->id,
+                'key' => $key,
+                'value' => $value,
+            ]);
+        }
+
+        return redirect()->back()->with('success', __('تم أضافة جروب الصلاحيه بنجاح!'));
     }
 
     public function update(Request $request, $id)
     {
-      $permissions = $request->except(['_token', 'title']);
+        $permissions = $request->except(['_token', 'title']);
 
-      $groupPermissionID = groupPermission::where('id', $id)->update([
-        'title' => $request->title
-      ]);
-
-      Permission::where('group_permission_id', $id)->delete();
-
-      foreach ($permissions as $key => $value) {
-        Permission::create([
-          'group_permission_id' => $id,
-          'key' => $key,
-          'value' => $value,
+        $groupPermissionID = groupPermission::where('id', $id)->update([
+            'title' => $request->title
         ]);
-      }
 
-      return redirect()->back()->with('success', __('تم تعديل الصلاحيه بنجاح!'));
+        Permission::where('group_permission_id', $id)->delete();
+
+        foreach ($permissions as $key => $value) {
+            Permission::create([
+                'group_permission_id' => $id,
+                'key' => $key,
+                'value' => $value,
+            ]);
+        }
+
+        return redirect()->back()->with('success', __('تم تعديل الصلاحيه بنجاح!'));
     }
 }

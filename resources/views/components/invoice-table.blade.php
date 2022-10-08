@@ -19,7 +19,19 @@
                 <td>{{ $invoice->id }}</td>
                 <td>{{ movementType($invoice->movement_type) }}</td>
                 <td>
-                    {!! (isset($invoice->customer->title)) ? '<a href="'.route('user.purchases', ['id' => $invoice->customer->id]).'">'.$invoice->customer->title.'</a>' : __('لا يوجد') !!}
+                    @if (isset($invoice->customer->title))
+                        @if ($invoice->customer->type == 'customer')
+                            <a href="{{ route('user.sales', ['id' => $invoice->customer->id]) }}">
+                                {{ $invoice->customer->title }}
+                            </a>
+                        @else
+                            <a href="{{ route('user.purchases', ['id' => $invoice->customer->id]) }}">
+                                {{ $invoice->customer->title }}
+                            </a>
+                        @endif
+                    @else
+                        {{ __('لا يوجد') }}
+                    @endif
                 </td>
                 <td>{{ $invoice->total }}</td>
                 <td>{{ $invoice->discount_amount }}</td>
@@ -30,12 +42,10 @@
                 <td>
                     {{-- <form action="{{ route('item.status', ['id' => $invoice->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post"> --}}
                     {{-- @csrf --}}
-                    <a href="{{ route('invoices.edit', ['id' => $invoice->id]) }}"
-                        class="btn btn-outline-info">
+                    <a href="{{ route('invoices.edit', ['id' => $invoice->id]) }}" class="btn btn-outline-info">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a href="{{ route('invoices.view', ['id' => $invoice->id]) }}"
-                        class="btn btn-outline-success">
+                    <a href="{{ route('invoices.view', ['id' => $invoice->id]) }}" class="btn btn-outline-success">
                         <i class="fa fa-eye"></i>
                     </a>
                     {{-- </form> --}}

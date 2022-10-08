@@ -1,14 +1,34 @@
 @extends('stander')
 
 @section('title')
-    {{ __('المستخدمين') }}
+    {{ __('الموردين') }}
 @endsection
+
+@php
+$totalPurchase= \DB::table('invoices')
+    ->where('customer_id', $user->id)
+    ->where('invoice_type', 'purchase')
+    ->where('movement_type', 'cash')
+    ->sum('total_bill');
+
+$totalDues = \DB::table('invoices')
+    ->where('customer_id', $user->id)
+    ->where('invoice_type', 'purchase')
+    ->where('movement_type', 'dues')
+    ->sum('total_bill');
+
+$totalResidual = \DB::table('invoices')
+    ->where('customer_id', $user->id)
+    ->where('invoice_type', 'purchase')
+    ->where('movement_type', 'dues')
+    ->sum('residual');
+@endphp
 
 @section('content')
     <div class="col-md-12">
         <div class="card card-widget widget-user">
 
-            <div class="widget-user-header bg-info">
+            <div class="widget-user-header bg-success">
                 <h3 class="widget-user-username">{{ $user->title }}</h3>
                 <h5 class="widget-user-desc">{{ $user->type == 'customer' ? __('عميل') : __('مورد') }}</h5>
             </div>
@@ -17,9 +37,11 @@
             </div>
             <div class="card-footer">
                 <div class="row">
-                    <div class="col-sm-4 border-right">
+                    <div class="col-sm-3 border-right">
                         <div class="description-block">
-                            <h5 class="description-header">3,200</h5>
+                            <h5 class="description-header">
+                                {{ $totalPurchase }}ج
+                            </h5>
                             <span class="description-text">
                                 <i class="fas fa-file-invoice-dollar"></i>
                                 {{ __('فواتير المشتريات') }}
@@ -27,9 +49,23 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-4 border-right">
+                    <div class="col-sm-3 border-right">
                         <div class="description-block">
-                            <h5 class="description-header">13,000</h5>
+                            <h5 class="description-header">
+                                {{ $totalDues }}ج
+                            </h5>
+                            <span class="description-text">
+                                <i class="fas fa-file-invoice"></i>
+                                {{ __('فواتير الاجل') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 border-right">
+                        <div class="description-block">
+                            <h5 class="description-header">
+                                {{ $totalBounce = \DB::table('invoices')->where('customer_id', $user->id)->where('invoice_type', 'bounce')->sum('total_bill') }}ج
+                            </h5>
                             <span class="description-text">
                                 <i class="fas fa-file-upload"></i>
                                 {{ __('فواتير المرتجع') }}
@@ -37,12 +73,12 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="description-block">
-                            <h5 class="description-header">35</h5>
+                            <h5 class="description-header">{{ $totalResidual }}ج</h5>
                             <span class="description-text">
                                 <i class="fas fa-money-bill-wave"></i>
-                                {{ __('المبالغ المستحقه') }}
+                                {{ __('المبالغ المطلوبه') }}
                             </span>
                         </div>
                     </div>
@@ -56,44 +92,33 @@
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('user/purchases*')) ? 'active' : '' }}" id="custom-tabs-four-home-tab" href="{{ route('user.purchases', ['id' => $user->id]) }}">
+                        <a class="nav-link {{ request()->is('user/purchases*') ? 'active' : '' }}"
+                            id="custom-tabs-four-home-tab" href="{{ route('user.purchases', ['id' => $user->id]) }}">
                             <i class="fas fa-file-invoice-dollar"></i>
-                            {{ __('فواتير المبيعات') }}
+                            {{ __('فواتير المشتريات') }}
                             <span class="badge badge-danger right">
-                                {{ 
-                                    \DB::table('invoices')
-                                    ->where('customer_id', $user->id)
-                                    ->where('invoice_type', 'sale')
-                                    ->count() 
-                                }}
+                                {{ \DB::table('invoices')->where('customer_id', $user->id)->where('invoice_type', 'purchase')->count() }}
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('user/bounces*')) ? 'active' : '' }}" id="custom-tabs-four-profile-tab" href="{{ route('user.bounces', ['id' => $user->id]) }}" role="tab">
+                        <a class="nav-link {{ request()->is('user/bounces*') ? 'active' : '' }}"
+                            id="custom-tabs-four-profile-tab" href="{{ route('user.bounces', ['id' => $user->id]) }}"
+                            role="tab">
                             <i class="fas fa-file-upload"></i>
                             {{ __('فواتير المرتجع') }}
                             <span class="badge badge-danger right">
-                                {{ 
-                                    \DB::table('invoices')
-                                    ->where('customer_id', $user->id)
-                                    ->where('invoice_type', 'bounce')
-                                    ->count() 
-                                }}
+                                {{ \DB::table('invoices')->where('customer_id', $user->id)->where('invoice_type', 'bounce')->count() }}
                             </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('user/damages*')) ? 'active' : '' }}" id="custom-tabs-four-messages-tab" href="{{ route('user.damages', ['id' => $user->id]) }}">
+                        <a class="nav-link {{ request()->is('user/damages*') ? 'active' : '' }}"
+                            id="custom-tabs-four-messages-tab" href="{{ route('user.damages', ['id' => $user->id]) }}">
                             <i class="fas fa-file-invoice-dollar"></i>
                             {{ __('فواتير التوالف') }}
                             <span class="badge badge-danger right">
-                                {{ 
-                                    \DB::table('invoices')
-                                    ->where('customer_id', $user->id)
-                                    ->where('invoice_type', 'damaged')
-                                    ->count() 
-                                }}
+                                {{ \DB::table('invoices')->where('customer_id', $user->id)->where('invoice_type', 'damaged')->count() }}
                             </span>
                         </a>
                     </li>

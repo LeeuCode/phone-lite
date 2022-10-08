@@ -16,11 +16,11 @@
         {{ __('انشاء فتورة بيع جديده') }}
     </a>
 
-    <a href="{{ route('item.create') }}" data-toggle="modal" data-target="#modal-search" class="btn btn-outline-primary mt-3"
+    {{-- <a href="{{ route('item.create') }}" data-toggle="modal" data-target="#modal-search" class="btn btn-outline-primary mt-3"
         style="margin-right: auto;margin-left:1rem;">
         <i class="fa fa-search"></i>
         {{ __('البحث عن فاتورة') }}
-    </a>
+    </a> --}}
 
     <div class="col-md-12 mt-3">
         <div class="card">

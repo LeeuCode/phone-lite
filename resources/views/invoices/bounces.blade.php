@@ -11,73 +11,21 @@
 @endsection
 
 @section('content')
-    <a href="{{ route('item.create') }}" class="btn btn-info mt-3 mr-3">
+    <a href="{{ route('invoices.bounce') }}" class="btn btn-info mt-3 mr-3">
         <i class="fa fa-plus"></i>
         {{ __('انشاء فتورة مرتجع جديده') }}
     </a>
 
-    <a href="{{ route('item.create') }}" data-toggle="modal" data-target="#modal-search" class="btn btn-outline-primary mt-3"
+    {{-- <a href="{{ route('item.create') }}" data-toggle="modal" data-target="#modal-search" class="btn btn-outline-primary mt-3"
         style="margin-right: auto;margin-left:1rem;">
         <i class="fa fa-search"></i>
         {{ __('البحث عن فاتورة') }}
-    </a>
+    </a> --}}
 
     <div class="col-md-12 mt-3">
         <div class="card">
             <div class="card-body p-0">
-                <table class="table">
-                    <thead class="text-center">
-                        <tr>
-                            <th>{{ __('رقم الفاتوره') }}</th>
-                            <th>{{ __('نوع الحركه') }}</th>
-                            <th>{{ __('العميل/المورد') }}</th>
-                            <th>{{ __('الاجمالي') }}</th>
-                            <th>{{ __('خصم مبلغ') }}</th>
-                            <th>{{ __('اجمالي بعد الخصم') }}</th>
-                            <th>{{ __('نسبة الضريبه') }}</th>
-                            <th>{{ __('إجمالي بعد الضريبه') }}</th>
-                            {{-- <th>{{ __('متوسط سعر البيع') }}</th> --}}
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        @foreach ($invoices as $invoice)
-                            <tr>
-                                <td>{{ $invoice->id }}</td>
-                                <td>{{ movementType($invoice->movement_type) }}</td>
-                                <td>{{ isset($invoice->customer->name) ? $invoice->customer->name : __('لا يوجد') }}</td>
-                                <td>{{ $invoice->total }}</td>
-                                <td>{{ $invoice->discount_amount }}</td>
-                                <td>{{ $invoice->total_discount }}</td>
-                                <td>{{ $invoice->tax_rate }}</td>
-                                <td>{{ $invoice->total_bill }}</td>
-                                {{-- <td>{{ $item->average_price }}</td> --}}
-                                <td>
-                                    {{-- <form action="{{ route('item.status', ['id' => $invoice->id]) }}" onsubmit="return confirm('{{ __('هل أنت متأكد من حذف العنصر؟!') }}')" method="post"> --}}
-                                    {{-- @csrf --}}
-                                    <a href="{{ route('invoices.edit', ['id' => $invoice->id]) }}"
-                                        class="btn btn-outline-info">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('invoices.view', ['id' => $invoice->id]) }}"
-                                        class="btn btn-outline-success">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                    {{-- </form> --}}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    @if ($invoices->hasPages())
-                        <tfoot>
-                            <tr>
-                                <td colspan="9">
-                                    {{ $invoices->links() }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    @endif
-                </table>
+                @include('components.invoice-table')
             </div>
         </div>
     </div>
