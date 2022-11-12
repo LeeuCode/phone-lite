@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Item;
+use App\Models\InvoiceItem;
 
 class CustomersController extends Controller
 {
@@ -135,5 +137,50 @@ class CustomersController extends Controller
         ]);
 
         return redirect()->back()->with('success', __('تم حذف المستخدم بنجاح'));
+    }
+
+    public function invoice(Request $request, $id)
+    {
+        $start = date("Y-m-d", strtotime($request->from));
+
+        $user = Customer::find($id);
+
+        $invoiceItem = $this->sortItems($start, $id);
+
+        $invoice = Invoice::where('customer_id', $id)
+        ->whereDate('created_at', $start)
+        ->where('invoice_type', 'sale')    
+        ->select(
+            \DB::raw('sum(total_bill) as total_bills'),
+            \DB::raw('sum(paid) as paids'),
+            \DB::raw('sum(residual) as residuals'),
+            )->first();
+
+        // dd($test, $invoiceItem);
+
+        return view('customers.invoice', [
+            'user' => $user,
+            'invoiceItem' => $invoiceItem,
+            'start' => $start,
+            'invoice' => $invoice,
+        ]);
+    }
+
+    protected function sortItems($start, $id)
+    {
+        return InvoiceItem::join('invoices', function ($join) {
+            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
+        })->select(
+            'invoice_items.item_id',
+            \DB::raw('sum(invoice_items.store_balance) as balances'),
+            \DB::raw('sum(invoice_items.quantity) as quantities'),
+            \DB::raw('sum(invoice_items.total) as totals')
+            
+        )
+        ->where('invoice_items.type', 'sale')
+            ->where('invoices.customer_id', $id)
+            ->where('date', $start)
+            ->groupby('item_id')
+            ->get();
     }
 }

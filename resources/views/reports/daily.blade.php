@@ -29,6 +29,8 @@ $totalBounceDameg = 0;
 $paidsPurchase = 0;
 $cashPurchase = 0;
 $totalPurchase = 0;
+
+$settlementTotal = 0;
 @endphp
 
 @section('content')
@@ -359,7 +361,7 @@ $totalPurchase = 0;
                                     <td>{{ $item->residuals }}ج</td>
                                 </tr>
                             @endforeach
-                            <tr>
+                            {{-- <tr> --}}
                             <tr>
                                 <td colspan="3"></td>
                                 <td class="text-right">
@@ -369,14 +371,13 @@ $totalPurchase = 0;
                                     <h4>{{ $totalPurchase = $cashPurchase + $paidsPurchase }}ج</h4>
                                 </td>
                             </tr>
-                            </tr>
+                            {{-- </tr> --}}
                         </tbody>
                     </table>
 
                     <hr class="mt-4 mb-4">
                 @endif
                 {{-- ./Invoice Purchase --}}
-
 
                 {{-- Installments --}}
                 @if (count($installments) > 0)
@@ -437,54 +438,39 @@ $totalPurchase = 0;
                 @endif
                 {{-- Installments --}}
 
-                @if (count($installments) > 0)
-                    <h5 class="text-danger mb-3">* {{ __('الأقساط المسدده') }}</h5>
+                @if (count($settlements) > 0)
+                    <h5 class="text-danger mb-3">* {{ __('تحصيل نقديه من العملاء') }}</h5>
                     <table class="table text-center">
                         <thead>
                             <tr>
                                 <th>{{ __('اسم العميل') }}</th>
-                                <th>{{ __('رقم الهاتف') }}</th>
-                                <th>{{ __('الصنف') }}</th>
-                                <th>{{ __('الكمية المباعة') }}</th>
-                                <th>{{ __('عدد الاشهر') }}</th>
-                                <th>{{ __('الأقساط المدفوعه') }}</th>
-                                <th>{{ __('الاقساط المتبقيه') }}</th>
-                                <th>{{ __('القسط الشهري') }}</th>
+                                <th>{{ __('المطلوب سداده') }}</th>
+                                <th>{{ __('المبلغ المدفوع') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (count($installments) > 0)
-                                @foreach ($installments as $installment)
+                            @if (count($settlements) > 0)
+                                @foreach ($settlements as $settlement)
+                                    @php
+                                        if ($settlement->amount < $settlement->paid) {
+                                            $settlementTotal += $settlement->amount;
+                                        } else {
+                                            $settlementTotal += $settlement->paid;
+                                        }
+                                    @endphp
                                     <tr>
-                                        <td>{{ $installment->customer->title }}</td>
-                                        <td>{{ $installment->customer->phone }}</td>
-                                        <td>
-                                            @php
-                                                $itemConut = $installment->item()->count();
-                                            @endphp
-                                            @if ($itemConut)
-                                                {{ $installment->item->title }}
-                                            @else
-                                                {{ __('لا يتوفر') }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $installment->quantity }}</td>
-                                        <td>{{ $installment->number_months }}</td>
-                                        <td>{{ $installment->premiums_paid }}</td>
-                                        <td>{{ $installment->remaining_installments }}</td>
-                                        <td>{{ $installment->monthly_installment }}</td>
+                                        <td>{{ $settlement->customer->title }}</td>
+                                        <td>{{ $settlement->amount }}</td>
+                                        <td>{{ $settlement->paid }}</td>
                                     </tr>
                                 @endforeach
-                            @else
                                 <tr>
-                                    <td colspan="9" class="text-center">
-                                        <i>
-                                            @if (request()->routeIs('devices.search'))
-                                                {{ __('لا توجد نتائج مطابقة لعملية بحثك') }}
-                                            @else
-                                                {{ __('لا توجد اي اقساط حتي الان') }}
-                                            @endif
-                                        </i>
+                                    <td colspan=""></td>
+                                    <td class="text-right">
+                                        <h5>مجموع تحصيل النقديه من العملاء</h5>
+                                    </td>
+                                    <td class="text-center">
+                                        <h4>{{ $settlementTotal }}ج</h4>
                                     </td>
                                 </tr>
                             @endif
@@ -497,7 +483,7 @@ $totalPurchase = 0;
                 <h4 class="text-center">
                     {{ __('اجمالي النقديه بالخزينة') }}
                     <br>
-                    <span class="text-info">{{ $total + $totalBounce - $totalBounceDameg - $totalPurchase }}ج</span>
+                    <span class="text-info">{{ $total + $totalBounce + $settlementTotal - $totalBounceDameg - $totalPurchase }}ج</span>
                 </h4>
             </div>
         </div>

@@ -7,6 +7,7 @@ use App\Models\InvoiceItem;
 use App\Models\ItemPrice;
 use App\Models\Invoice;
 use App\Models\Item;
+use App\Models\Customer;
 
 class InvoicesController extends Controller
 {
@@ -103,6 +104,12 @@ class InvoicesController extends Controller
             Invoice::where('id', $invoice->id)->update([
                 'movement_type' => 'dues'
             ]);
+
+            if (!empty($request->customer_id)) {
+                Customer::where('id',$request->customer_id)->increment(
+                    'balance',$request->residual
+                );
+            }
         } else {
             Invoice::where('id', $invoice->id)->update([
                 'movement_type' => 'cash'
@@ -168,7 +175,6 @@ class InvoicesController extends Controller
 
     public function invoiceDuesPay(Request $request)
     {
-
         $invoice = Invoice::find($request->id);
         $movementType = $invoice->movement_type;
         $piad = ($invoice->paid + $request->paid);

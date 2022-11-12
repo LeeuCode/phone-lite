@@ -84,6 +84,10 @@ Route::group(['middleware' => ['auth']], function () {
     ->name('ajax.invoice.remaining.amount');
   Route::get('ajax/invoice/dues', 'AjaxController@getInvoicesDues')->name('ajax.invoice.dues');
 
+  Route::get('ajax/dues/customers', 'AjaxController@getDuesCustomers')->name('ajax.dues.getCustomers');
+  Route::get('ajax/dues/suppliers', 'AjaxController@getDuesSuppliers')->name('ajax.dues.getSuppliers');
+  Route::get('ajax/customer/balance/{id}', 'AjaxController@getCustomerBalance')->name('ajax.customer.balance');
+
   Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
   Route::post('ajax/createUser', 'AjaxController@createUser')->name('ajax.createUser');
   Route::post('ajax/invoice/dues', 'AjaxController@invoiceDues')->name('ajax.invoice.dues');
@@ -119,6 +123,8 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('user/store', 'CustomersController@store')->name('user.store');
   Route::post('user/update/{id}', 'CustomersController@update')->name('user.update');
   Route::post('user/destroy/{id}', 'CustomersController@destroy')->name('user.destroy');
+
+  Route::get('customer/invoice/{id}', 'CustomersController@invoice')->name('customer.invoice');
 
   /*================================
   ||---- [Installments Routes] ----||
@@ -171,8 +177,13 @@ Route::group(['middleware' => ['auth']], function () {
   ||------ [Options Routes] -------||
   =================================*/
   Route::get('settings', 'OptionsController@index')->name('settings.index');
-
   Route::post('setting/update', 'OptionsController@update')->name('settings.update');
+
+  /*================================
+  ||----- [Settlement Routes] -----||
+  =================================*/
+
+  Route::post('settlement/save', 'SettlementController@save')->name('settlement.save');
 });
 
 Auth::routes();

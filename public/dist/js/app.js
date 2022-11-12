@@ -174,7 +174,16 @@ $.AdminLTESidebarTweak.options = {
         $('.white-mode-nav').addClass('d-none');
     }
 
+    $(document).on('click', '.show-menu-bar', function (e) {
+        e.preventDefault();
+        $('.main-nav').css({ right: 0 });
+        // $('.show-menu-bar').css({right:})
+    });
 
+    $(document).on('click', '.close-menu', function (e) {
+        e.preventDefault();
+        $('.main-nav').css({ right: '-50%' });
+    });
 
 })(jQuery);
 
@@ -510,3 +519,11 @@ function getCookie(cname) {
     }
     return "";
 }
+
+
+
+function popupwindow(url, title, w, h) {
+    var left = (screen.width / 2) - (w / 2);
+    var top = (screen.height / 2) - (h / 2);
+    return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+} 

@@ -5,7 +5,7 @@ if (isset($invoice)) {
     $inv = '';
 }
 @endphp
-<div class="col-md-2">
+<div class="col-sm-2 col-md-2">
     <div class="card card-primary">
         <!-- form start -->
         <div class="card-body">

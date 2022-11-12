@@ -6,30 +6,30 @@
 @endsection
 
 @php
-if (isset($invoice)) {
-    $inv = $invoice;
-} else {
-    $inv = '';
-}
+    if (isset($invoice)) {
+        $inv = $invoice;
+    } else {
+        $inv = '';
+    }
 @endphp
 
 <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
-<div class="col-md-12 mt-3 position-sticky sticky-top">
+<div class="col-md-12 mt-3 position-sticky sticky-md-top sticky-xl-top">
     <div class="card card-primary">
         <!-- form start -->
         <div class="card-body row">
-            <div class="col-md-1">
+            <div class="col-xl-1 col-md-2 col-3">
                 <div class="form-group">
-                    <label for="id" class="control-label small">{{ __('فاتورة') }}</label>
+                    <label for="id" class="control-label small">{{ __('Invoice') }}</label>
                     <input class="form-control form-control-sm text-center p-0" id="id"
                         value="{{ $id }}" readonly placeholder="00">
                 </div>
             </div>
 
             @if (!isset($view))
-                <div class="col-md-2">
+                <div class="col-xl-2 col-md-3 col-4">
                     <div class="form-group">
-                        <label for="id" class="control-label small">{{ __('باركود الصنف') }}</label>
+                        <label for="id" class="control-label small">{{ __('Item barcode') }}</label>
                         <input type="number" class="p-0 form-control form-control-sm text-center barcode"
                             id="id" placeholder="00" autofocus="true" autocomplete="off">
                     </div>
@@ -37,19 +37,20 @@ if (isset($invoice)) {
             @endif
 
             @if (!isset($view))
-                <div class="col-md-3">
+                <div class="col-xl-3 col-md-5 col-5">
                     <div class="form-group">
-                        <label for="id" class="control-label small">{{ __('اسم الصنف') }}</label>
+                        <label for="id" class="control-label small">{{ __('Item Name') }}</label>
                         <select class="form-control form-control-sm" id="item-name">
-                            <option value="">{{ __('أكتب اسم الصنف اذا لم تتذكر الباركود') }}</option>
+                            <option value="">
+                                {{ __('Write the name of the item if you don\'t remember the barcode') }}</option>
                         </select>
                     </div>
                 </div>
             @endif
 
-            <div class="col-md-1 p-0">
+            <div class="col-xl-1 col-md-2 col-3 p-0">
                 <div class="form-group">
-                    <label for="invoice_type" class="control-label small">{{ __('نوع الفاتوره') }}</label>
+                    <label for="invoice_type" class="control-label small">{{ __('Invoice type') }}</label>
                     <select name="invoice_type" class="form-control form-control-sm" id="invoice_type">
                         @foreach (invoiceType() as $key => $value)
                             @php
@@ -65,9 +66,9 @@ if (isset($invoice)) {
                 </div>
             </div>
 
-            <div class="col-md-1 p-0 pl-3">
+            <div class="col-xl-1 col-md-2 col-3 p-0 pl-3">
                 <div class="form-group">
-                    <label for="movement_type" class="control-label small">{{ __('نوع الحركه') }}</label>
+                    <label for="movement_type" class="control-label small">{{ __('Movement type') }}</label>
                     <select name="movement_type" class="form-control form-control-sm" id="movement_type">
                         @foreach (movementType() as $key => $value)
                             @php
@@ -83,11 +84,11 @@ if (isset($invoice)) {
                 </div>
             </div>
 
-            <div class="col-md-2 dues">
+            <div class="col-xl-2 col-md-4 col-6 dues">
                 <div class="form-group row m-0">
-                    <div class="col-md-11 p-0">
+                    <div class="col-md-11 col-10 p-0">
                         <label for="agentName" class="control-label small agentName">
-                            {{ request()->routeIs('invoices.purchase') ? __('اسم المورد') : __('اسم العميل') }}
+                            {{ request()->routeIs('invoices.purchase') ? __('Supplier name') : __('Client name') }}
                             {{-- __('اسم المورد') --}}
                         </label>
 
@@ -110,7 +111,7 @@ if (isset($invoice)) {
                             {!! $selectOption !!}
                         </select>
                     </div>
-                    <div class="col-md-1 p-0">
+                    <div class="col-md-1 col-2 p-0">
                         <label for="agentName" class="control-label small text-white">.</label>
                         <button type="button" class="btn bg-light input-group-prepend" data-toggle="modal"
                             data-target="#add-cutomer">
@@ -119,10 +120,11 @@ if (isset($invoice)) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <label for="movement_type" class="control-label small">{{ __('تاريخ الفاتورة') }}</label>
+            <div class="col-xl-2 col-md-4">
+                <label for="movement_type" class="control-label small">{{ __('Invoice date') }}</label>
                 <input class="form-control form-control-sm text-center p-0" id="id"
-                        value="{{ isset($inv->created_at) ? date('d-m-Y', strtotime($inv->created_at)) : date('d-m-Y') }}" disabled>
+                    value="{{ isset($inv->created_at) ? date('d-m-Y', strtotime($inv->created_at)) : date('d-m-Y') }}"
+                    disabled>
             </div>
         </div>
         <!-- /.card-body -->
@@ -145,18 +147,6 @@ if (isset($invoice)) {
                 $("#supplier_id, #customer_id").empty();
                 invoiceType();
             });
-
-            // $(document).on('change', '#movement_type', function() {
-            //     var type = $(this).val();
-
-            //     $("#supplier_id, #customer_id").empty();
-
-            //     if (type == 'dues') {
-            //         $('.dues').show();
-            //     } else {
-            //         $('.dues').hide();
-            //     }
-            // })
 
             $('#item-name').on('select2:select', function(e) {
                 var data = e.params.data;

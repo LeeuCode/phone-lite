@@ -7,6 +7,7 @@ use App\Models\InvoiceItem;
 use App\Models\Installment;
 use App\Models\Item;
 use App\Models\Invoice;
+use App\Models\Settlement;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -64,84 +65,21 @@ class ReportsController extends Controller
     {
         $start = date("Y-m-d", strtotime($request->from));
 
-        $invoiceSale = Invoice::where('invoice_type', 'sale')
-        // ->where('movement_type', 'cash')
-        ->whereDate('created_at', $start)
-        ->select(
-            'movement_type',
-            
-            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
-            \DB::raw('sum(invoices.total_bill) as total_bills'),
-            \DB::raw('sum(invoices.paid) as paids'),
-            \DB::raw('sum(invoices.residual) as residuals'),
-        )
-        ->groupBy('movement_type')
-        ->get();
+        $invoiceSale = $this->sortRows($start, 'sale');
 
-        $invoicePurchase = Invoice::where('invoice_type', 'purchase')
-        ->whereDate('created_at', $start)
-        ->select(
-            'movement_type',
-            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
-            \DB::raw('sum(invoices.total_bill) as total_bills'),
-            \DB::raw('sum(invoices.paid) as paids'),
-            \DB::raw('sum(invoices.residual) as residuals'),
-        )
-        ->groupBy('movement_type')
-        ->get();
+        $invoicePurchase = $this->sortRows($start, 'purchase');
 
-        $invoiceBounce = Invoice::where('invoice_type', 'bounce')
-        ->whereDate('created_at', $start)
-        ->select(
-            'movement_type',
-            
-            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
-            \DB::raw('sum(invoices.total_bill) as total_bills'),
-            \DB::raw('sum(invoices.paid) as paids'),
-            \DB::raw('sum(invoices.residual) as residuals'),
-        )
-        ->groupBy('movement_type')
-        ->get();
+        $invoiceBounce = $this->sortRows($start, 'bounce');
 
-        $invoiceBounceDameg = Invoice::where('invoice_type', 'bounce_dameg')
-        ->whereDate('created_at', $start)
-        ->select(
-            'movement_type',
-            \DB::raw('COUNT(invoices.invoice_type) as quantities'),
-            \DB::raw('sum(invoices.total_bill) as total_bills'),
-            \DB::raw('sum(invoices.paid) as paids'),
-            \DB::raw('sum(invoices.residual) as residuals'),
-        )
-        ->groupBy('movement_type')
-        ->get();
+        $invoiceBounceDameg = $this->sortRows($start, 'bounce_dameg');
 
-        // dd($invoicePurchase);
+        $itemCash = $this->sortItems($start, 'cash');
 
-        $itemCash = InvoiceItem::join('invoices', function ($join) {
-            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
-        })
-            ->select(
-                'invoice_items.item_id',
-                \DB::raw('sum(invoice_items.store_balance) as balances'),
-                \DB::raw('sum(invoice_items.quantity) as quantities'),
-                \DB::raw('sum(invoice_items.total) as totals')
-            )
-            ->where('invoice_items.type', 'sale')
-            ->where('invoices.movement_type', 'cash')
-            ->where('date', $start)
-            ->groupby('item_id');
+        $itemDues = $this->sortItems($start, 'dues');
 
-        $itemDues = InvoiceItem::join('invoices', function ($join) {
-            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
-        })->select(
-            'invoice_items.item_id',
-            \DB::raw('sum(invoice_items.store_balance) as balances'),
-            \DB::raw('sum(invoice_items.quantity) as quantities'),
-            \DB::raw('sum(invoice_items.total) as totals')
-        )->where('invoice_items.type', 'sale')
-            ->where('invoices.movement_type', 'dues')
-            ->where('date', $start)
-            ->groupby('item_id');
+        $settlements = Settlement::where('customer_type', 'customer')->whereDate('created_at', $start)->get();
+
+        // dd($settlement);
 
         $itemsCash = [];
         $itemsDues = [];
@@ -161,7 +99,39 @@ class ReportsController extends Controller
             'invoiceSale' => $invoiceSale,
             'invoicePurchase' => $invoicePurchase,
             'invoiceBounce' => $invoiceBounce,
-            'invoiceBounceDameg' => $invoiceBounceDameg
+            'invoiceBounceDameg' => $invoiceBounceDameg,
+            'settlements' => $settlements
         ]);
+    }
+
+
+    protected function sortRows($start, $invoice_type)
+    {
+        return Invoice::where('invoice_type', $invoice_type)
+            ->whereDate('created_at', $start)
+            ->select(
+                'movement_type',
+                \DB::raw('COUNT(invoices.invoice_type) as quantities'),
+                \DB::raw('sum(invoices.total_bill) as total_bills'),
+                \DB::raw('sum(invoices.paid) as paids'),
+                \DB::raw('sum(invoices.residual) as residuals'),
+            )
+            ->groupBy('movement_type')
+            ->get();
+    }
+
+    protected function sortItems($start, $movement_type)
+    {
+        return InvoiceItem::join('invoices', function ($join) {
+            $join->on('invoices.id', '=', 'invoice_items.invoice_id');
+        })->select(
+            'invoice_items.item_id',
+            \DB::raw('sum(invoice_items.store_balance) as balances'),
+            \DB::raw('sum(invoice_items.quantity) as quantities'),
+            \DB::raw('sum(invoice_items.total) as totals')
+        )->where('invoice_items.type', 'sale')
+            ->where('invoices.movement_type', $movement_type)
+            ->where('date', $start)
+            ->groupby('item_id');
     }
 }

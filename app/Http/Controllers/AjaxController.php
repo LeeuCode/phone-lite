@@ -265,4 +265,53 @@ class AjaxController extends Controller
     {
         // code...
     }
+
+    public function getDuesCustomers(Request $request)
+    {
+        /* ====== Get value from search input. ====== */
+        $search = $request->get('search');
+
+        /* ====== Get all categories name where like search input value. ====== */
+        $data = Customer::where('type', 'customer')
+            ->where('balance','!=',0)
+            ->paginate(7);
+
+        /* ====== Return store names as json. ====== */
+        return response()->json(
+            [
+                'items' => $data->toArray()['data'],
+                'pagination' => $data->nextPageUrl() ? true : false
+            ]
+        );
+    }
+
+    public function getDuesSuppliers(Request $request)
+    {
+        /* ====== Get value from search input. ====== */
+        $search = $request->get('search');
+
+        /* ====== Get all categories name where like search input value. ====== */
+        $data = Customer::where('type', 'suppliers')
+        ->where('balance','!=',0)
+        ->paginate(7);
+
+        /* ====== Return store names as json. ====== */
+        return response()->json(
+            [
+                'items' => $data->toArray()['data'],
+                'pagination' => $data->nextPageUrl() ? true : false
+            ]
+        );
+    }
+
+    public function getCustomerBalance($id)
+    {
+        $customer = Customer::find($id);
+
+        return response()->json(
+            [
+                'balance' => $customer->balance
+            ]
+        );
+    }
 }

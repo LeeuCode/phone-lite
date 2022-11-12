@@ -8,8 +8,8 @@
     <form id="invoice-save" class="w-100 row" action="{{ route('invoice.save') }}" method="post">
         @include('components.invoice-header', ['id' => $id])
         @csrf
-        <div class="col-md-10">
-            <div class="card">
+        <div class="col-sm-12 col-md-10 col-xl-10">
+            <div class="card overflow-auto">
                 {{-- <div class="card-body"> --}}
                 <table class="table table-bordered mb-0">
                     <thead>

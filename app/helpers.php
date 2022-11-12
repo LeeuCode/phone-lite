@@ -404,11 +404,6 @@ function sidbarItems()
             'route' => 'users.suppliers'
         ],
         'expenses' => [
-            'name' => 'المصروفات',
-            'icon' => 'fas fa-money-check-alt',
-            'route' => 'link'
-        ],
-        'expenses' => [
             'name' => 'الحسابات',
             'icon' => 'fas fa-cash-register',
             'route' => 'link'

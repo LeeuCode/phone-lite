@@ -115,16 +115,19 @@ $totalResidual = \DB::table('invoices')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('user/damages*') ? 'active' : '' }}"
                             id="custom-tabs-four-messages-tab" href="{{ route('user.damages', ['id' => $user->id]) }}">
-                            <i class="fas fa-file-invoice-dollar"></i>
+                            <i class="fas fa-file-excel"></i>
                             {{ __('فواتير التوالف') }}
                             <span class="badge badge-danger right">
                                 {{ \DB::table('invoices')->where('customer_id', $user->id)->where('invoice_type', 'damaged')->count() }}
                             </span>
                         </a>
                     </li>
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" id="custom-tabs-four-settings-tab" href="#custom-tabs-four-settings">Settings</a>
-                    </li> --}}
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('customer/invoice*') ? 'active' : '' }}" href="{{ route('customer.invoice', ['id' => $user->id]) }}">
+                            <i class="fas fa-receipt"></i>
+                            {{ __('فاتورة مجمعه') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="card-body">

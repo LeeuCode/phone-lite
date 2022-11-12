@@ -1,8 +1,20 @@
 <!-- Main Footer -->
 <footer class="main-footer">
+
+    {{-- <button onclick="popupwindow('http://www.xtf.dk','xtf',900,500); ">
+        Open Geeksforgeeks
+    </button>
+ 
+    <script>
+        function NewTab() {
+            window.open("https://www.geeksforgeeks.org",
+                    "", "width=300, height=300");
+        }
+    </script> --}}
+
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-        V1.0.0
+        V2.0
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; 2020-{{ date('Y') }} <a href="https://adminlte.io">{{ __('LeeuCode') }}</a>.</strong>
@@ -11,11 +23,17 @@
 </div>
 <!-- ./wrapper -->
 
+@include('includes.components.add-item-modal')
+
 @include('components.installment-collection-modal')
 
 @include('components.dues-modal')
 
+@include('components.customer-cash-collection-modal')
+
 @include('installments.print', ['continar_ID' => 'installment-print-page-modal'])
+
+@include('components.add-category-model')
 
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -31,8 +49,16 @@
 
 <!-- printThis -->
 <script src="{{ asset('dist/js/printThis.js') }}" charset="utf-8"></script>
+{{-- <script src="{{ asset('dist/js/nice-scroll.js') }}" charset="utf-8"></script> --}}
 <script>
     (function($) {
+
+        select2Ajax('#cat_id', '{{ route('ajax.getCategories') }}');
+
+        select2Ajax('#model', '{{ route('ajax.getModels') }}');
+
+        select2Ajax('#unit_id', '{{ route('ajax.getunities') }}');
+
         select2Ajax('.installment-customer-id', '{{ route('ajax.getCustomers') }}');
 
         select2Ajax('#invoice-id-model', '{{ route('ajax.invoice.dues') }}', 'id');
@@ -139,7 +165,65 @@
                 );
             });
         });
+    })(jQuery)
+</script>
 
+
+<script type="text/javascript">
+    (function($) {
+        $(document).on('change', '#customer-type-model', function() {
+            var type = $(this).val();
+
+            if (type == 'customer') {
+                $('#customer-type').text('{{ __('اختار عميل') }}');
+                $('.customer_model_id').attr('id', 'customer-dues');
+
+                select2Ajax('#customer-dues', '{{ route('ajax.dues.getCustomers') }}');
+            } else {
+                $('#customer-type').text('{{ __('مورد اختار') }}');
+                $('.customer_model_id').attr('id', 'supplier-dues');
+
+                select2Ajax('#supplier-dues', '{{ route('ajax.dues.getSuppliers') }}');
+            }
+        });
+
+        $(document).on('change', '.customer_model_id', function() {
+            var customer_id = $(this).val();
+
+
+            $.get("{{ url('ajax/customer/balance/') }}/" + customer_id, function(data, status) {
+                $('#amount-model').val(data.balance);
+            });
+        });
+
+        $(document).on('submit', '.cash-collection-submit', function(e) {
+
+
+            var url = $(this).attr('action'),
+                formData = $(this).serialize();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.post(url, $.param($(this).serializeArray()), function(data, status) {
+
+                $('.cash-collection-submit').trigger("reset");
+
+                $('#customer-cash-collection-modal').modal('hide');
+
+                Swal.fire(
+                    '{{ __('عملية ناجحة') }}',
+                    '{{ __('تم تسديد المبلغ بنجاح!') }}',
+                    'success'
+                );
+            });
+
+            e.preventDefault();
+            return false;
+        });
     })(jQuery)
 </script>
 @yield('js')

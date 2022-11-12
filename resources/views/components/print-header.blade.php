@@ -3,7 +3,7 @@ if (!isset($title)) {
     $title = 'فاتورة';
 }
 @endphp
-<div id="{{ $continarID }}" class="ticket d-none">
+<div id="{{ $continarID }}" class="ticket {{ (!isset($show)) ? 'd-none' : '' }}">
     @php
         $logo = getOption('logo');
     @endphp
@@ -20,5 +20,5 @@ if (!isset($title)) {
         @endif
         <h3 class="centered m-1" style="font-family: Arial;">{{ getOption('shop_name') }}</h3>
     </div>
-    <h3 class="centered m-1 print-head" style="font-family: Arial;border:1px dashed #333;margin: 0.50rem 0;">
+    <h3 class="centered text-center m-1 print-head" style="font-family: Arial;border:1px dashed #333;margin: 0.50rem 0;">
         {{ $title }}</h3>
