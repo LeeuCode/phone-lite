@@ -17,31 +17,10 @@ Route::group(['middleware' => ['auth']], function () {
     return view('index'); //view('welcome');
   })->name('home');
 
-  /*================================
-  ||-------- [Items Routes] -------||
-  =================================*/
-  Route::get('items', 'ItemsController@index')->name('items');
-  Route::get('items/out-of-stock', 'ItemsController@outOfStock')->name('items.out-of-stock');
-  Route::get('item/create', 'ItemsController@create')->name('item.create');
-  Route::get('item/edit/{id}', 'ItemsController@edit')->name('item.edit');
-  Route::get('item/search', 'ItemsController@search')->name('item.search');
-  Route::get('item/balance', 'ItemsController@balance')->name('item.balance');
 
-  Route::post('item/store', 'ItemsController@store')->name('item.store');
-  Route::post('item/update/{id}', 'ItemsController@update')->name('item.update');
-  Route::post('item/status/{id}', 'ItemsController@status')->name('item.status');
-  Route::post('item/balance/store', 'ItemsController@balanceStore')->name('item.balance.store');
+  require_once __DIR__. '/custom/items.php';
 
-  /*================================
-  ||----- [Categories Routes] -----||
-  =================================*/
-  Route::get('categories', 'CategoriesController@index')->name('categories');
-  Route::get('unities', 'CategoriesController@unities')->name('unities');
-  Route::get('models', 'CategoriesController@models')->name('models');
-
-  Route::post('category/store', 'CategoriesController@store')->name('category.store');
-  Route::post('category/update/{id}', 'CategoriesController@update')->name('category.update');
-  Route::post('category/status/{id}', 'CategoriesController@status')->name('category.status');
+  require_once __DIR__. '/custom/categories.php';
 
   /*================================
   ||---- [Maintenances Routes] ----||
@@ -66,31 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('device/used/store', 'usedDevicesController@store')->name('devices.used.store');
   Route::post('device/used/sale/{id}', 'usedDevicesController@sale')->name('devices.used.update');
 
-  /*================================
-  ||-------- [Ajax Routes] --------||
-  =================================*/
-  Route::get('ajax/items', 'AjaxController@getItems')->name('ajax.getItems');
-  Route::get('ajax/item', 'AjaxController@getItem')->name('ajax.getItem');
-  Route::get('ajax/categories', 'AjaxController@getCategories')->name('ajax.getCategories');
-  Route::get('ajax/models', 'AjaxController@getModels')->name('ajax.getModels');
-  Route::get('ajax/unities', 'AjaxController@getunities')->name('ajax.getunities');
-  Route::get('ajax/damages', 'AjaxController@getDamges')->name('ajax.getDamges');
-  Route::get('ajax/devices', 'AjaxController@getDvices')->name('ajax.getDvices');
-  Route::get('ajax/customers', 'AjaxController@getCustomers')->name('ajax.getCustomers');
-  Route::get('ajax/suppliers', 'AjaxController@getSuppliers')->name('ajax.getSuppliers');
-  Route::get('ajax/installment/user', 'AjaxController@getInstallmentByCustomer')->name('ajax.installment.user');
-  Route::get('ajax/installment/months', 'AjaxController@getMonthsByInstallment')->name('ajax.months.installment');
-  Route::get('ajax/invoice/remaining/amount', 'AjaxController@getInvoiceRemainingAmount')
-    ->name('ajax.invoice.remaining.amount');
-  Route::get('ajax/invoice/dues', 'AjaxController@getInvoicesDues')->name('ajax.invoice.dues');
-
-  Route::get('ajax/dues/customers', 'AjaxController@getDuesCustomers')->name('ajax.dues.getCustomers');
-  Route::get('ajax/dues/suppliers', 'AjaxController@getDuesSuppliers')->name('ajax.dues.getSuppliers');
-  Route::get('ajax/customer/balance/{id}', 'AjaxController@getCustomerBalance')->name('ajax.customer.balance');
-
-  Route::post('ajax/createCategory', 'AjaxController@createCategory')->name('ajax.createCategory');
-  Route::post('ajax/createUser', 'AjaxController@createUser')->name('ajax.createUser');
-  Route::post('ajax/invoice/dues', 'AjaxController@invoiceDues')->name('ajax.invoice.dues');
+  require_once __DIR__. '/custom/ajax.php';
 
   /*================================
   ||------ [Invoices Routes] ------||

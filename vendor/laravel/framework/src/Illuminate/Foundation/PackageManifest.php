@@ -55,7 +55,7 @@ class PackageManifest
         $this->files = $files;
         $this->basePath = $basePath;
         $this->manifestPath = $manifestPath;
-        $this->vendorPath = $basePath.'/vendor';
+        $this->vendorPath = $basePath . '/vendor';
     }
 
     /**
@@ -65,9 +65,7 @@ class PackageManifest
      */
     public function providers()
     {
-        return collect($this->getManifest())->flatMap(function ($configuration) {
-            return (array) ($configuration['providers'] ?? []);
-        })->filter()->all();
+        return $this->config('providers');
     }
 
     /**
@@ -77,8 +75,19 @@ class PackageManifest
      */
     public function aliases()
     {
-        return collect($this->getManifest())->flatMap(function ($configuration) {
-            return (array) ($configuration['aliases'] ?? []);
+        return $this->config('aliases');
+    }
+
+    /**
+     * Get all of the values for all packages for the given configuration name.
+     *
+     * @param  string  $key
+     * @return array
+     */
+    public function config($key)
+    {
+        return collect($this->getManifest())->flatMap(function ($configuration) use ($key) {
+            return (array) ($configuration[$key] ?? []);
         })->filter()->all();
     }
 
@@ -89,11 +98,11 @@ class PackageManifest
      */
     protected function getManifest()
     {
-        if (! is_null($this->manifest)) {
+        if (!is_null($this->manifest)) {
             return $this->manifest;
         }
 
-        if (! file_exists($this->manifestPath)) {
+        if (!file_exists($this->manifestPath)) {
             $this->build();
         }
 
@@ -112,9 +121,8 @@ class PackageManifest
     {
         $packages = [];
 
-        if ($this->files->exists($path = $this->vendorPath.'/composer/installed.json')) {
+        if ($this->files->exists($path = $this->vendorPath . '/composer/installed.json')) {
             $installed = json_decode($this->files->get($path), true);
-
             $packages = $installed['packages'] ?? $installed;
         }
 
@@ -137,7 +145,7 @@ class PackageManifest
      */
     protected function format($package)
     {
-        return str_replace($this->vendorPath.'/', '', $package);
+        return str_replace($this->vendorPath . '/', '', $package);
     }
 
     /**
@@ -147,12 +155,12 @@ class PackageManifest
      */
     protected function packagesToIgnore()
     {
-        if (! file_exists($this->basePath.'/composer.json')) {
+        if (!file_exists($this->basePath . '/composer.json')) {
             return [];
         }
 
         return json_decode(file_get_contents(
-            $this->basePath.'/composer.json'
+            $this->basePath . '/composer.json'
         ), true)['extra']['laravel']['dont-discover'] ?? [];
     }
 
@@ -166,12 +174,13 @@ class PackageManifest
      */
     protected function write(array $manifest)
     {
-        if (! is_writable(dirname($this->manifestPath))) {
-            throw new Exception('The '.dirname($this->manifestPath).' directory must be present and writable.');
+        if (!is_writable(dirname($this->manifestPath))) {
+            throw new Exception('The ' . dirname($this->manifestPath) . ' directory must be present and writable.');
         }
 
         $this->files->replace(
-            $this->manifestPath, '<?php return '.var_export($manifest, true).';'
+            $this->manifestPath,
+            '<?php return ' . var_export($manifest, true) . ';'
         );
     }
 }

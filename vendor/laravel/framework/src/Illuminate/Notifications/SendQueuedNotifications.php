@@ -3,12 +3,14 @@
 namespace Illuminate\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class SendQueuedNotifications implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * The notifiable entities that should receive the notification.
@@ -56,8 +58,8 @@ class SendQueuedNotifications implements ShouldQueue
     public function __construct($notifiables, $notification, array $channels = null)
     {
         $this->channels = $channels;
-        $this->notifiables = $notifiables;
         $this->notification = $notification;
+        $this->notifiables = Collection::wrap($notifiables);
         $this->tries = property_exists($notification, 'tries') ? $notification->tries : null;
         $this->timeout = property_exists($notification, 'timeout') ? $notification->timeout : null;
     }
@@ -86,7 +88,7 @@ class SendQueuedNotifications implements ShouldQueue
     /**
      * Call the failed method on the notification instance.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
     public function failed($e)
@@ -108,6 +110,20 @@ class SendQueuedNotifications implements ShouldQueue
         }
 
         return $this->notification->retryAfter ?? $this->notification->retryAfter();
+    }
+
+    /**
+     * Get the expiration for the notification.
+     *
+     * @return mixed
+     */
+    public function retryUntil()
+    {
+        if (! method_exists($this->notification, 'retryUntil') && ! isset($this->notification->timeoutAt)) {
+            return;
+        }
+
+        return $this->notification->timeoutAt ?? $this->notification->retryUntil();
     }
 
     /**
