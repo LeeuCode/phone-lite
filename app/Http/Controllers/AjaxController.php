@@ -160,7 +160,7 @@ class AjaxController extends Controller
     public function getItem(Request $request)
     {
         $id = $request->id;
-        $data['item'] = Item::where('publish', 1)->where('barcode', $id)->orWhere('barcode', $id)->first();
+        $data['item'] = Item::where('publish', 1)->where('id', $id)->orWhere('barcode', $id)->first();
         // $data['itemPrice'] = ItemPrice::where('item_id', $data['item']->id)->where('quantity','>',0)->first();
 
         return response()->json($data);

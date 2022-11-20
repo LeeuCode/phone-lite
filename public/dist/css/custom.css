@@ -10,7 +10,7 @@
 
 *{
     font-family: 'Cairo', sans-serif;
-    direction: rtl !important;
+    /* direction: rtl !important; */
     /* font-size: 14px; */
 }
 .bg-gradient-blue {

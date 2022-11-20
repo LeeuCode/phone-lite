@@ -1,17 +1,5 @@
 <!-- Main Footer -->
 <footer class="main-footer">
-
-    {{-- <button onclick="popupwindow('http://www.xtf.dk','xtf',900,500); ">
-        Open Geeksforgeeks
-    </button>
- 
-    <script>
-        function NewTab() {
-            window.open("https://www.geeksforgeeks.org",
-                    "", "width=300, height=300");
-        }
-    </script> --}}
-
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
         V2.0

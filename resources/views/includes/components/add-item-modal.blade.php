@@ -56,7 +56,7 @@
                         <label for="model" class="control-label">{{ __('الموديل') }}</label>
                         <div class="input-group">
                             <select name="model" class="form-control" id="model" required>
-                                <option value="" selected>{{ __('اختار الموديل') }}...</option>
+                                <option value="">{{ __('اختار الموديل') }}...</option>
                             </select>
                             <div class="input-group-btn p-0 d-flex">
                                 <button type="button" class="add-cat btn btn-primary bg-gradient-dark"
@@ -72,7 +72,7 @@
                         <label for="unit_id" class="control-label">{{ __('وحدة المنتج') }}</label>
                         <div class="input-group">
                             <select name="unit_id" class="form-control" id="unit_id" required>
-                                <option value="" selected>{{ __('اختار الوحده') }}...</option>
+                                <option value="">{{ __('اختار الوحده') }}...</option>
                             </select>
                             <div class="input-group-btn p-0 d-flex">
                                 <button type="button" class="add-cat btn btn-primary bg-gradient-dark" data-title="{{ __('أضف الوحدة') }}"
